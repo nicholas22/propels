@@ -29,7 +29,7 @@ you may re-use your experience across three languages (C#, Java, Scala).
 ## Java <--> Scala collections bridging
 
 There are a lot moving parts in Scala collections and having them changed a few times did not help many developers.
-Using PropelS this project you can easily convert between Java/Scala collections:
+Using PropelS (this project!) you can easily convert between Java/Scala collections:
 
 
 #### toArray(...)
