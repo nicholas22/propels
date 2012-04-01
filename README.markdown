@@ -130,5 +130,5 @@ There are plans to port certain things over to Scala (especially if they are usi
 ##Changelog
 
 ####1.0: Creation
-All LINQ methods have been ported
+All LINQ methods have been ported.  
 Added extra methods: partition, unzip (these will be backported to jpropel)
