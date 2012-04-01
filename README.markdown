@@ -123,7 +123,7 @@ You may use this project in open and closed source projects. The LGPL license si
 ## Dependencies
 
 As PropelS is in its early stages, it currently depends on the latest [JPropel-light library](https://github.com/nicholas22/jpropel-light) because it requires certain un-ported yet classes.
-There are plans to port certain things over to Scala (especially if they are using functional features, currently via [lombok-pg](https://github.com/peichhorn/lombok-pg). 
+There are plans to port certain things over to Scala (especially if they are using functional features), which are currently handled using [lombok-pg](https://github.com/peichhorn/lombok-pg). 
 
 
 
