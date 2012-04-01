@@ -4508,8 +4508,10 @@ object Linq {
       if (item == null) throw new NullPointerException("item")
 
       for (x <- values)
-        if (x.equals(item))
-          true
+        // if a value is null, we cannot use equals
+        if (x != null)
+          if (x.equals(item))
+            true
 
       false
     }
@@ -4522,9 +4524,11 @@ object Linq {
       if (values == null) throw new NullPointerException("values")
       if (item == null) throw new NullPointerException("item")
 
-      for (x <- values)
-        if (x.equals(item))
-          true
+      for (x <- values)        
+        // if a value is null, we cannot use equals
+        if (x != null)
+          if (x.equals(item))
+            true
 
       false
     }
@@ -4534,10 +4538,10 @@ object Linq {
    */
   private def containsNonNull[T](values: Traversable[T], item: T, comparer: Comparator[T]): Boolean =
     {
-      for (v <- values)
+      for (x <- values)
         // if a value is null, we cannot use equals
-        if (v != null)
-          if (comparer.compare(v, item) == 0)
+        if (x != null)
+          if (comparer.compare(x, item) == 0)
             true
 
       false
@@ -4550,10 +4554,10 @@ object Linq {
     {
       val count = values.length
       for (i <- 0 to count) {
-        val v = values(i)
+        val x = values(i)
         // if a value is null, we cannot use equals
-        if (v != null)
-          if (comparer.compare(v, item) == 0)
+        if (x != null)
+          if (comparer.compare(x, item) == 0)
             true
       }
 
