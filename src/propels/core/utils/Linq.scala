@@ -18,35 +18,34 @@
 // /////////////////////////////////////////////////////////
 package propels.core.utils
 
-import scala.collection.mutable.ArrayBuffer
-import scala.collection.JavaConversions
-import scala.collection.JavaConverters
-import propel.core.collections.lists.ReifiedList
-import propel.core.collections.maps.ReifiedMap
 import java.util.Collection
-import propel.core.utils.InvalidCastBehaviour
-import propel.core.utils.ArrayUtils
 import java.util.ArrayList
-import propel.core.collections.lists.ReifiedArrayList
-import propel.core.collections.ReifiedIterable
-import scala.util.control.Breaks.breakable
-import scala.util.control.Breaks.break
-import java.util.Comparator
-import java.util.TreeMap
-import propel.core.counters.ModuloCounter
 import java.util.Set
 import java.util.TreeSet
 import java.util.Collections
+import java.util.Comparator
+import java.util.TreeMap
+import propel.core.collections.arrays.ReadOnlyArrayIterator
+import propel.core.collections.lists.ReifiedList
+import propel.core.collections.lists.ReifiedArrayList
+import propel.core.collections.ReifiedIterable
+import propel.core.collections.maps.ReifiedMap
+import propel.core.counters.ModuloCounter
+import propel.core.utils.InvalidCastBehaviour
+import scala.collection.mutable.ArrayBuffer
+import scala.collection.JavaConversions
+import scala.collection.JavaConverters
+import scala.util.control.Breaks.breakable
+import scala.util.control.Breaks.break
 import scala.collection.mutable.Buffer
 import scala.util.Sorting
-import propel.core.collections.arrays.ReadOnlyArrayIterator
 
 object Linq {
 
   /**
    * The default list size to use for collecting results when the result size is unknown
    */
-  val DEFAULT_LIST_SIZE = propel.core.utils.Linq.DEFAULT_LIST_SIZE
+  val DEFAULT_LIST_SIZE = 64
 
   /**
    * Applies an accumulator function over a Traversable. The specified seed value is used as the initial accumulator value.
@@ -265,7 +264,7 @@ object Linq {
    */
   def cast[TSource, TDest](values: java.lang.Iterable[TSource], destinationClass: Class[TDest]): java.lang.Iterable[TDest] =
     {
-      propel.core.utils.Linq.cast(values, destinationClass, InvalidCastBehaviour.Remove)
+      propels.core.utils.Linq.cast(values, destinationClass, InvalidCastBehaviour.Remove)
     }
 
   /**
@@ -317,7 +316,7 @@ object Linq {
    */
   def cast[TSource, TDest](values: java.lang.Iterable[TSource], destinationClass: Class[TDest], castBehaviour: InvalidCastBehaviour): java.lang.Iterable[TDest] =
     {
-      propel.core.utils.Linq.cast(values, destinationClass, castBehaviour)
+      propels.core.utils.Linq.cast(values, destinationClass, castBehaviour)
     }
 
   /**
@@ -432,7 +431,7 @@ object Linq {
    */
   def contains[T](values: java.lang.Iterable[T], item: T, comparer: Comparator[T]): Boolean =
     {
-      propel.core.utils.Linq.contains(values, item, comparer)
+      propels.core.utils.Linq.contains(values, item, comparer)
     }
 
   /**
@@ -479,7 +478,7 @@ object Linq {
    */
   def containsAny[T](values: java.lang.Iterable[T], items: java.lang.Iterable[T]): Boolean =
     {
-      propel.core.utils.Linq.containsAny(values, items)
+      propels.core.utils.Linq.containsAny(values, items)
     }
 
   /**
@@ -625,7 +624,7 @@ object Linq {
    */
   def count[T](values: java.lang.Iterable[T]): Int =
     {
-      propel.core.utils.Linq.count(values)
+      propels.core.utils.Linq.count(values)
     }
 
   /**
@@ -661,7 +660,7 @@ object Linq {
    */
   def count[T](values: java.lang.Iterable[T], item: T): Int =
     {
-      propel.core.utils.Linq.count(values, item)
+      propels.core.utils.Linq.count(values, item)
     }
 
   /**
@@ -697,7 +696,7 @@ object Linq {
    */
   def count[T](values: java.lang.Iterable[T], item: T, comparer: Comparator[T]): Int =
     {
-      propel.core.utils.Linq.count(values, item, comparer)
+      propels.core.utils.Linq.count(values, item, comparer)
     }
 
   /**
@@ -800,7 +799,7 @@ object Linq {
    */
   def defaultIfEmpty[T](values: java.lang.Iterable[T]): java.lang.Iterable[T] =
     {
-      propel.core.utils.Linq.defaultIfEmpty(values)
+      propels.core.utils.Linq.defaultIfEmpty(values)
     }
 
   /**
@@ -898,7 +897,7 @@ object Linq {
    */
   def distinct[T](values: java.lang.Iterable[T], comparer: Comparator[T]): java.lang.Iterable[T] =
     {
-      propel.core.utils.Linq.distinct(values, comparer)
+      propels.core.utils.Linq.distinct(values, comparer)
     }
 
   /**
@@ -942,7 +941,7 @@ object Linq {
    */
   def elementAt[T](values: java.lang.Iterable[T], index: Int): T =
     {
-      propel.core.utils.Linq.elementAt(values, index)
+      propels.core.utils.Linq.elementAt(values, index)
     }
 
   /**
@@ -993,7 +992,7 @@ object Linq {
    */
   def elementAtOrDefault[T](values: java.lang.Iterable[T], index: Int): T =
     {
-      propel.core.utils.Linq.elementAtOrDefault(values, index)
+      propels.core.utils.Linq.elementAtOrDefault(values, index)
     }
 
   /**
@@ -1091,7 +1090,7 @@ object Linq {
    */
   def except[T](values: java.lang.Iterable[T], removedValues: java.lang.Iterable[T], comparer: Comparator[T]): java.lang.Iterable[T] =
     {
-      propel.core.utils.Linq.except(values, removedValues, comparer)
+      propels.core.utils.Linq.except(values, removedValues, comparer)
     }
 
   /**
@@ -1132,7 +1131,7 @@ object Linq {
    */
   def first[T](values: java.lang.Iterable[T]): T =
     {
-      propel.core.utils.Linq.first(values)
+      propels.core.utils.Linq.first(values)
     }
 
   /**
@@ -1231,7 +1230,7 @@ object Linq {
    */
   def firstOrDefault[T](values: java.lang.Iterable[T]): T =
     {
-      propel.core.utils.Linq.firstOrDefault(values)
+      propels.core.utils.Linq.firstOrDefault(values)
     }
 
   /**
@@ -1655,7 +1654,7 @@ object Linq {
    */
   def isEmpty[T](values: java.lang.Iterable[T]): Boolean =
     {
-      propel.core.utils.Linq.isEmpty(values)
+      propels.core.utils.Linq.isEmpty(values)
     }
 
   /**
@@ -1716,7 +1715,7 @@ object Linq {
    */
   def last[T](values: java.lang.Iterable[T]): T =
     {
-      propel.core.utils.Linq.last(values)
+      propels.core.utils.Linq.last(values)
     }
 
   /**
@@ -1839,7 +1838,7 @@ object Linq {
    */
   def lastOrDefault[T](values: java.lang.Iterable[T]): T =
     {
-      propel.core.utils.Linq.lastOrDefault(values)
+      propels.core.utils.Linq.lastOrDefault(values)
     }
 
   /**
@@ -2006,7 +2005,7 @@ object Linq {
    */
   def max[T <: Comparable[T]](items: Array[T]): T =
     {
-      propel.core.utils.Linq.max(items)
+      propels.core.utils.Linq.max(items)
     }
 
   /**
@@ -2045,7 +2044,7 @@ object Linq {
    * @throws NullPointerException An argument is null
    */
   def min[T <: Comparable[T]](items: Array[T]) {
-    propel.core.utils.Linq.min(items)
+    propels.core.utils.Linq.min(items)
   }
 
   /**
@@ -2201,7 +2200,7 @@ object Linq {
    */
   def maxOccurring[T](items: java.lang.Iterable[T], comparator: Comparator[T]): T =
     {
-      propel.core.utils.Linq.maxOccurring(items, comparator)
+      propels.core.utils.Linq.maxOccurring(items, comparator)
     }
 
   /**
@@ -2317,7 +2316,7 @@ object Linq {
    */
   def minOccurring[T](items: java.lang.Iterable[T], comparator: Comparator[T]): T =
     {
-      propel.core.utils.Linq.minOccurring(items, comparator)
+      propels.core.utils.Linq.minOccurring(items, comparator)
     }
 
   /**
@@ -2999,7 +2998,7 @@ object Linq {
    */
   def range[T](values: java.lang.Iterable[T], start: Int, finish: Int): java.lang.Iterable[T] =
     {
-      propel.core.utils.Linq.range(values, start, finish)
+      propels.core.utils.Linq.range(values, start, finish)
     }
 
   /**
@@ -3313,7 +3312,7 @@ object Linq {
    */
   def sequenceEqual[T](values1: java.lang.Iterable[T], values2: java.lang.Iterable[T]): Boolean =
     {
-      propel.core.utils.Linq.sequenceEqual(values1, values2)
+      propels.core.utils.Linq.sequenceEqual(values1, values2)
     }
 
   /**
@@ -3358,7 +3357,7 @@ object Linq {
    */
   def single[T](values: java.lang.Iterable[T]): T =
     {
-      propel.core.utils.Linq.single(values)
+      propels.core.utils.Linq.single(values)
     }
 
   /**
@@ -3431,7 +3430,7 @@ object Linq {
    */
   def skip[T](values: java.lang.Iterable[T], count: Int): java.lang.Iterable[T] =
     {
-      propel.core.utils.Linq.skip(values, count)
+      propels.core.utils.Linq.skip(values, count)
     }
 
   /**
@@ -3910,6 +3909,27 @@ object Linq {
     }
 
   /**
+   * Converts an iterable to an array.
+   *
+   * @throws NullPointerException An argument is nul.
+   */
+  def toArray[T](values: java.lang.Iterable[T], componentType: Class[_]): Array[T] =
+    {
+      if (values == null) throw new NullPointerException("values")
+
+      val result = ArrayUtils.create[T](componentType, count(values))
+      val it = values.iterator
+
+      var i = 0
+      while (it.hasNext) {
+        result(i) = it.next
+        i = i + 1
+      }
+
+      result
+    }
+
+  /**
    * Converts a collection to an array.
    *
    * @throws NullPointerException An argument is null.
@@ -3921,6 +3941,30 @@ object Linq {
       // count items
       val size = values.size()
       val result = new Array[T](size)
+
+      val it = values.iterator
+
+      var i = 0
+      while (it.hasNext) {
+        result(i) = it.next
+        i = i + 1
+      }
+
+      result
+    }
+
+  /**
+   * Converts a collection to an array.
+   *
+   * @throws NullPointerException An argument is null.
+   */
+  def toArray[T](values: Collection[T], componentType: Class[_]): Array[T] =
+    {
+      if (values == null) throw new NullPointerException("values")
+
+      // count items
+      val size = values.size()
+      val result = ArrayUtils.create[T](componentType, values.size)
 
       val it = values.iterator
 
@@ -4142,7 +4186,7 @@ object Linq {
    */
   def union[T](first: java.lang.Iterable[T], second: java.lang.Iterable[T]): java.lang.Iterable[T] =
     {
-      propel.core.utils.Linq.union(first, second)
+      propels.core.utils.Linq.union(first, second)
     }
 
   /**
@@ -4196,7 +4240,7 @@ object Linq {
    */
   def union[T](first: java.lang.Iterable[T], second: java.lang.Iterable[T], comparer: Comparator[T]): java.lang.Iterable[T] =
     {
-      propel.core.utils.Linq.union(first, second, comparer)
+      propels.core.utils.Linq.union(first, second, comparer)
     }
 
   /**
@@ -4524,7 +4568,7 @@ object Linq {
       if (values == null) throw new NullPointerException("values")
       if (item == null) throw new NullPointerException("item")
 
-      for (x <- values)        
+      for (x <- values)
         // if a value is null, we cannot use equals
         if (x != null)
           if (x.equals(item))
