@@ -1,4 +1,4 @@
-# Hi there!
+## Hi there!
 
 PropelS is a Scala library porting features of [JPropel](http://github.com/nicholas22/jpropel).
 
@@ -127,8 +127,14 @@ There are plans to port certain things over to Scala (especially if they are usi
 
 
 
-##Changelog
+## Changelog
 
-####1.0: Creation
+#### 0.2: Almost all functional classes ported
+ArrayUtils ported
+LINQ bugfixes  
+
+
+#### 0.1: Creation
 All LINQ methods have been ported.  
-Added extra methods: partition, unzip (these will be backported to jpropel)
+Added extra methods: partition, unzip (these will be backported to jpropel)  
+
