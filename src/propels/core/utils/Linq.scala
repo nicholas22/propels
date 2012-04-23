@@ -264,7 +264,7 @@ object Linq {
    */
   def cast[TSource, TDest](values: java.lang.Iterable[TSource], destinationClass: Class[TDest]): java.lang.Iterable[TDest] =
     {
-      propels.core.utils.Linq.cast(values, destinationClass, InvalidCastBehaviour.Remove)
+      propel.core.utils.Linq.cast(values, destinationClass, InvalidCastBehaviour.Remove)
     }
 
   /**
@@ -316,7 +316,7 @@ object Linq {
    */
   def cast[TSource, TDest](values: java.lang.Iterable[TSource], destinationClass: Class[TDest], castBehaviour: InvalidCastBehaviour): java.lang.Iterable[TDest] =
     {
-      propels.core.utils.Linq.cast(values, destinationClass, castBehaviour)
+      propel.core.utils.Linq.cast(values, destinationClass, castBehaviour)
     }
 
   /**
@@ -431,7 +431,7 @@ object Linq {
    */
   def contains[T](values: java.lang.Iterable[T], item: T, comparer: Comparator[T]): Boolean =
     {
-      propels.core.utils.Linq.contains(values, item, comparer)
+      propel.core.utils.Linq.contains(values, item, comparer)
     }
 
   /**
@@ -478,7 +478,7 @@ object Linq {
    */
   def containsAny[T](values: java.lang.Iterable[T], items: java.lang.Iterable[T]): Boolean =
     {
-      propels.core.utils.Linq.containsAny(values, items)
+      propel.core.utils.Linq.containsAny(values, items)
     }
 
   /**
@@ -624,7 +624,7 @@ object Linq {
    */
   def count[T](values: java.lang.Iterable[T]): Int =
     {
-      propels.core.utils.Linq.count(values)
+      propel.core.utils.Linq.count(values)
     }
 
   /**
@@ -660,7 +660,7 @@ object Linq {
    */
   def count[T](values: java.lang.Iterable[T], item: T): Int =
     {
-      propels.core.utils.Linq.count(values, item)
+      propel.core.utils.Linq.count(values, item)
     }
 
   /**
@@ -696,7 +696,7 @@ object Linq {
    */
   def count[T](values: java.lang.Iterable[T], item: T, comparer: Comparator[T]): Int =
     {
-      propels.core.utils.Linq.count(values, item, comparer)
+      propel.core.utils.Linq.count(values, item, comparer)
     }
 
   /**
@@ -799,7 +799,7 @@ object Linq {
    */
   def defaultIfEmpty[T](values: java.lang.Iterable[T]): java.lang.Iterable[T] =
     {
-      propels.core.utils.Linq.defaultIfEmpty(values)
+      propel.core.utils.Linq.defaultIfEmpty(values)
     }
 
   /**
@@ -897,7 +897,7 @@ object Linq {
    */
   def distinct[T](values: java.lang.Iterable[T], comparer: Comparator[T]): java.lang.Iterable[T] =
     {
-      propels.core.utils.Linq.distinct(values, comparer)
+      propel.core.utils.Linq.distinct(values, comparer)
     }
 
   /**
@@ -941,7 +941,7 @@ object Linq {
    */
   def elementAt[T](values: java.lang.Iterable[T], index: Int): T =
     {
-      propels.core.utils.Linq.elementAt(values, index)
+      propel.core.utils.Linq.elementAt(values, index)
     }
 
   /**
@@ -992,7 +992,7 @@ object Linq {
    */
   def elementAtOrDefault[T](values: java.lang.Iterable[T], index: Int): T =
     {
-      propels.core.utils.Linq.elementAtOrDefault(values, index)
+      propel.core.utils.Linq.elementAtOrDefault(values, index)
     }
 
   /**
@@ -1090,7 +1090,7 @@ object Linq {
    */
   def except[T](values: java.lang.Iterable[T], removedValues: java.lang.Iterable[T], comparer: Comparator[T]): java.lang.Iterable[T] =
     {
-      propels.core.utils.Linq.except(values, removedValues, comparer)
+      propel.core.utils.Linq.except(values, removedValues, comparer)
     }
 
   /**
@@ -1131,7 +1131,7 @@ object Linq {
    */
   def first[T](values: java.lang.Iterable[T]): T =
     {
-      propels.core.utils.Linq.first(values)
+      propel.core.utils.Linq.first(values)
     }
 
   /**
@@ -1230,7 +1230,7 @@ object Linq {
    */
   def firstOrDefault[T](values: java.lang.Iterable[T]): T =
     {
-      propels.core.utils.Linq.firstOrDefault(values)
+      propel.core.utils.Linq.firstOrDefault(values)
     }
 
   /**
@@ -1654,7 +1654,7 @@ object Linq {
    */
   def isEmpty[T](values: java.lang.Iterable[T]): Boolean =
     {
-      propels.core.utils.Linq.isEmpty(values)
+      propel.core.utils.Linq.isEmpty(values)
     }
 
   /**
@@ -1715,7 +1715,7 @@ object Linq {
    */
   def last[T](values: java.lang.Iterable[T]): T =
     {
-      propels.core.utils.Linq.last(values)
+      propel.core.utils.Linq.last(values)
     }
 
   /**
@@ -1838,7 +1838,7 @@ object Linq {
    */
   def lastOrDefault[T](values: java.lang.Iterable[T]): T =
     {
-      propels.core.utils.Linq.lastOrDefault(values)
+      propel.core.utils.Linq.lastOrDefault(values)
     }
 
   /**
@@ -2005,7 +2005,7 @@ object Linq {
    */
   def max[T <: Comparable[T]](items: Array[T]): T =
     {
-      propels.core.utils.Linq.max(items)
+      propel.core.utils.Linq.max(items)
     }
 
   /**
@@ -2044,7 +2044,7 @@ object Linq {
    * @throws NullPointerException An argument is null
    */
   def min[T <: Comparable[T]](items: Array[T]) {
-    propels.core.utils.Linq.min(items)
+    propel.core.utils.Linq.min(items)
   }
 
   /**
@@ -2200,7 +2200,7 @@ object Linq {
    */
   def maxOccurring[T](items: java.lang.Iterable[T], comparator: Comparator[T]): T =
     {
-      propels.core.utils.Linq.maxOccurring(items, comparator)
+      propel.core.utils.Linq.maxOccurring(items, comparator)
     }
 
   /**
@@ -2316,7 +2316,7 @@ object Linq {
    */
   def minOccurring[T](items: java.lang.Iterable[T], comparator: Comparator[T]): T =
     {
-      propels.core.utils.Linq.minOccurring(items, comparator)
+      propel.core.utils.Linq.minOccurring(items, comparator)
     }
 
   /**
@@ -2998,7 +2998,7 @@ object Linq {
    */
   def range[T](values: java.lang.Iterable[T], start: Int, finish: Int): java.lang.Iterable[T] =
     {
-      propels.core.utils.Linq.range(values, start, finish)
+      propel.core.utils.Linq.range(values, start, finish)
     }
 
   /**
@@ -3312,7 +3312,7 @@ object Linq {
    */
   def sequenceEqual[T](values1: java.lang.Iterable[T], values2: java.lang.Iterable[T]): Boolean =
     {
-      propels.core.utils.Linq.sequenceEqual(values1, values2)
+      propel.core.utils.Linq.sequenceEqual(values1, values2)
     }
 
   /**
@@ -3357,7 +3357,7 @@ object Linq {
    */
   def single[T](values: java.lang.Iterable[T]): T =
     {
-      propels.core.utils.Linq.single(values)
+      propel.core.utils.Linq.single(values)
     }
 
   /**
@@ -3430,7 +3430,7 @@ object Linq {
    */
   def skip[T](values: java.lang.Iterable[T], count: Int): java.lang.Iterable[T] =
     {
-      propels.core.utils.Linq.skip(values, count)
+      propel.core.utils.Linq.skip(values, count)
     }
 
   /**
@@ -4186,7 +4186,7 @@ object Linq {
    */
   def union[T](first: java.lang.Iterable[T], second: java.lang.Iterable[T]): java.lang.Iterable[T] =
     {
-      propels.core.utils.Linq.union(first, second)
+      propel.core.utils.Linq.union(first, second)
     }
 
   /**
@@ -4240,7 +4240,7 @@ object Linq {
    */
   def union[T](first: java.lang.Iterable[T], second: java.lang.Iterable[T], comparer: Comparator[T]): java.lang.Iterable[T] =
     {
-      propels.core.utils.Linq.union(first, second, comparer)
+      propel.core.utils.Linq.union(first, second, comparer)
     }
 
   /**

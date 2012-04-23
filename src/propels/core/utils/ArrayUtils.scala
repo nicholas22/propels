@@ -1,6 +1,7 @@
 package propels.core.utils
 
 import java.util.Arrays
+import java.util.ArrayList
 import java.util.Comparator
 import propel.core.common.CONSTANT
 import propel.core.collections.lists.ReifiedArrayList
@@ -11,7 +12,6 @@ import propel.core.utils.PrimitiveArrayType
 import propel.core.utils.StringUtils
 import propel.core.utils.ReflectionUtils
 import scala.collection.mutable.Buffer
-import java.util.ArrayList
 
 object ArrayUtils {
 
