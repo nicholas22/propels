@@ -131,7 +131,6 @@ object Linq {
       if (resultSelector == null) throw new NullPointerException("resultSelector")
 
       var result = seed
-
       for (item <- values)
         result = func(result, item)
 
@@ -327,7 +326,7 @@ object Linq {
   def concat[T](values: Traversable[_ <: T]*): Traversable[T] =
     {
       if (values == null) throw new NullPointerException("values")
-      val result = new ArrayBuffer[T](64)
+      val result = new ArrayBuffer[T](DEFAULT_LIST_SIZE)
 
       for (item <- values) {
         if (item == null) throw new NullPointerException("Item of values")
@@ -447,9 +446,9 @@ object Linq {
 
       for (item <- items)
         if (contains(values, item))
-          true
+          return true
 
-      false
+      return false
     }
 
   /**
@@ -465,9 +464,9 @@ object Linq {
 
       for (item <- items)
         if (contains(values, item))
-          true
+          return true
 
-      false
+      return false
     }
 
   /**
@@ -494,9 +493,9 @@ object Linq {
 
       for (item <- items)
         if (contains(values, item, comparer))
-          true
+          return true
 
-      false
+      return false
     }
 
   /**
@@ -512,9 +511,9 @@ object Linq {
 
       for (item <- items)
         if (contains(values, item, comparer))
-          true
+          return true
 
-      false
+      return false
     }
 
   /**
@@ -532,10 +531,10 @@ object Linq {
       while (it.hasNext) {
         val item = it.next
         if (contains(values, item, comparer))
-          true
+          return true
       }
 
-      false
+      return false
     }
 
   /**
@@ -551,9 +550,9 @@ object Linq {
 
       for (item <- items)
         if (!contains(values, item))
-          false
+          return false
 
-      true
+      return true
     }
 
   /**
@@ -569,9 +568,9 @@ object Linq {
 
       for (item <- items)
         if (!contains(values, item))
-          false
+          return false
 
-      true
+      return true
     }
 
   /**
@@ -589,10 +588,10 @@ object Linq {
       while (it.hasNext) {
         val item = it.next
         if (!contains(values, item))
-          false
+          return false
       }
 
-      true
+      return true
     }
 
   /**
@@ -914,7 +913,7 @@ object Linq {
       var i: Int = 0
       for (item <- values) {
         if (i == index)
-          item
+          return item
 
         i += 1
       }
@@ -961,7 +960,7 @@ object Linq {
           val item = it.next
 
           if (i == index)
-            item
+            return item
 
           i += 1
         }
@@ -1104,7 +1103,7 @@ object Linq {
       if (values == null) throw new NullPointerException("values")
 
       for (item <- values)
-        item
+        return item
 
       throw new NoSuchElementException("The traversable is empty")
     }
@@ -1147,7 +1146,7 @@ object Linq {
 
       for (element <- values)
         if (predicate(element))
-          element
+          return element
 
       throw new NoSuchElementException("There is no match to the given predicate")
     }
@@ -1165,7 +1164,7 @@ object Linq {
 
       for (element <- values)
         if (predicate(element))
-          element
+          return element
 
       throw new NoSuchElementException("There is no match to the given predicate")
     }
@@ -1187,7 +1186,7 @@ object Linq {
         val element = it.next
 
         if (predicate(element))
-          element
+          return element
       }
 
       throw new NoSuchElementException("There is no match to the given predicate")
@@ -1203,7 +1202,7 @@ object Linq {
       if (values == null) throw new NullPointerException("values")
 
       for (item <- values)
-        item
+        return item
 
       null.asInstanceOf[T]
     }
@@ -1218,7 +1217,7 @@ object Linq {
       if (values == null) throw new NullPointerException("values")
 
       for (item <- values)
-        item
+        return item
 
       null.asInstanceOf[T]
     }
@@ -1244,7 +1243,7 @@ object Linq {
 
       for (item <- values)
         if (predicate(item))
-          item
+          return item
 
       null.asInstanceOf[T]
     }
@@ -1260,7 +1259,7 @@ object Linq {
 
       for (item <- values)
         if (predicate(item))
-          item
+          return item
 
       null.asInstanceOf[T]
     }
@@ -1279,7 +1278,7 @@ object Linq {
       while (it.hasNext) {
         val item = it.next
         if (predicate(item))
-          item
+          return item
       }
 
       null.asInstanceOf[T]
@@ -1630,9 +1629,9 @@ object Linq {
       if (values == null) throw new NullPointerException("values")
 
       for (x <- values)
-        false
+        return false
 
-      true
+      return true
     }
 
   /**
@@ -1804,8 +1803,8 @@ object Linq {
 
       if (found)
         result
-
-      null.asInstanceOf[T]
+      else
+        null.asInstanceOf[T]
     }
 
   /**
@@ -1827,8 +1826,8 @@ object Linq {
 
       if (found)
         result
-
-      null.asInstanceOf[T]
+      else
+        null.asInstanceOf[T]
     }
 
   /**
@@ -1862,8 +1861,8 @@ object Linq {
 
       if (found)
         result
-
-      null.asInstanceOf[T]
+      else
+        null.asInstanceOf[T]
     }
 
   /**
@@ -1887,8 +1886,8 @@ object Linq {
 
       if (found)
         result
-
-      null.asInstanceOf[T]
+      else
+        null.asInstanceOf[T]
     }
 
   /**
@@ -1916,8 +1915,8 @@ object Linq {
 
       if (found)
         result
-
-      null.asInstanceOf[T]
+      else
+        null.asInstanceOf[T]
     }
 
   /**
@@ -2019,8 +2018,8 @@ object Linq {
 
       if (items.length <= 0)
         0
-
-      items.max
+      else
+        items.max
     }
 
   /**
@@ -2034,8 +2033,8 @@ object Linq {
 
       if (items.length <= 0)
         0L
-
-      items.max
+      else
+        items.max
     }
 
   /**
@@ -2057,14 +2056,15 @@ object Linq {
       if (items == null) throw new NullPointerException("items")
 
       if (items.length <= 0)
-        return 0
+        0
+      else {
+        var min = items(0)
+        for (item <- items)
+          if (min > item)
+            min = item
 
-      var min = items(0)
-      for (item <- items)
-        if (min > item)
-          min = item
-
-      min
+        min
+      }
     }
 
   /**
@@ -2077,14 +2077,15 @@ object Linq {
       if (items == null) throw new NullPointerException("items")
 
       if (items.length <= 0)
-        return 0
+        0
+      else {
+        var min = items(0)
+        for (item <- items)
+          if (min > item)
+            min = item
 
-      var min = items(0)
-      for (item <- items)
-        if (min > item)
-          min = item
-
-      min
+        min
+      }
     }
 
   /**
@@ -2139,21 +2140,22 @@ object Linq {
 
       if (lookup.size() <= 0)
         null.asInstanceOf[T]
+      else {
+        var max = -1L
+        var result: T = defaultValue
 
-      var max = -1L
-      var result: T = defaultValue
+        val it = lookup.entrySet.iterator
+        while (it.hasNext) {
+          val kvp = it.next
 
-      val it = lookup.entrySet.iterator
-      while (it.hasNext) {
-        val kvp = it.next
-
-        if (kvp.getValue().getValue() > max) {
-          max = kvp.getValue().getValue()
-          result = kvp.getKey()
+          if (kvp.getValue().getValue() > max) {
+            max = kvp.getValue().getValue()
+            result = kvp.getKey()
+          }
         }
-      }
 
-      result
+        result
+      }
     }
 
   /**
@@ -2175,21 +2177,22 @@ object Linq {
 
       if (lookup.size() <= 0)
         null.asInstanceOf[T]
+      else {
+        var max = -1L
+        var result: T = defaultValue
 
-      var max = -1L
-      var result: T = defaultValue
+        val it = lookup.entrySet.iterator
+        while (it.hasNext) {
+          val kvp = it.next
 
-      val it = lookup.entrySet.iterator
-      while (it.hasNext) {
-        val kvp = it.next
-
-        if (kvp.getValue().getValue() > max) {
-          max = kvp.getValue().getValue()
-          result = kvp.getKey()
+          if (kvp.getValue().getValue() > max) {
+            max = kvp.getValue().getValue()
+            result = kvp.getKey()
+          }
         }
-      }
 
-      result
+        result
+      }
     }
 
   /**
@@ -2248,28 +2251,29 @@ object Linq {
 
       if (items.size <= 0)
         null.asInstanceOf[T]
+      else {
+        val lookup = new TreeMap[T, ModuloCounter](comparator)
+        for (item <- items)
+          if (!lookup.containsKey(item))
+            lookup.put(item, new ModuloCounter(Long.MaxValue - 1))
+          else
+            lookup.get(item).next()
 
-      val lookup = new TreeMap[T, ModuloCounter](comparator)
-      for (item <- items)
-        if (!lookup.containsKey(item))
-          lookup.put(item, new ModuloCounter(Long.MaxValue - 1))
-        else
-          lookup.get(item).next()
+        var min = Long.MaxValue
+        var result: T = defaultValue
 
-      var min = Long.MaxValue
-      var result: T = defaultValue
+        val it = lookup.entrySet.iterator
+        while (it.hasNext) {
+          val kvp = it.next
 
-      val it = lookup.entrySet.iterator
-      while (it.hasNext) {
-        val kvp = it.next
-
-        if (kvp.getValue().getValue() < min) {
-          min = kvp.getValue().getValue()
-          result = kvp.getKey()
+          if (kvp.getValue().getValue() < min) {
+            min = kvp.getValue().getValue()
+            result = kvp.getKey()
+          }
         }
-      }
 
-      result
+        result
+      }
     }
 
   /**
@@ -2284,28 +2288,29 @@ object Linq {
 
       if (items.length <= 0)
         null.asInstanceOf[T]
+      else {
+        val lookup = new TreeMap[T, ModuloCounter](comparator)
+        for (item <- items)
+          if (!lookup.containsKey(item))
+            lookup.put(item, new ModuloCounter(Long.MaxValue - 1))
+          else
+            lookup.get(item).next()
 
-      val lookup = new TreeMap[T, ModuloCounter](comparator)
-      for (item <- items)
-        if (!lookup.containsKey(item))
-          lookup.put(item, new ModuloCounter(Long.MaxValue - 1))
-        else
-          lookup.get(item).next()
+        var min = Long.MaxValue
+        var result: T = defaultValue
 
-      var min = Long.MaxValue
-      var result: T = defaultValue
+        val it = lookup.entrySet.iterator
+        while (it.hasNext) {
+          val kvp = it.next
 
-      val it = lookup.entrySet.iterator
-      while (it.hasNext) {
-        val kvp = it.next
-
-        if (kvp.getValue().getValue() < min) {
-          min = kvp.getValue().getValue()
-          result = kvp.getKey()
+          if (kvp.getValue().getValue() < min) {
+            min = kvp.getValue().getValue()
+            result = kvp.getKey()
+          }
         }
-      }
 
-      result
+        result
+      }
     }
 
   /**
@@ -3252,7 +3257,7 @@ object Linq {
       if (values2 == null) throw new NullPointerException("values2")
 
       if (count(values1) != count(values2))
-        return false
+        false
       else {
         val i1 = values1.toIterator
         val i2 = values2.toIterator
@@ -3265,10 +3270,10 @@ object Linq {
           // compare using Equals if both not null
           if (v1 != null && v2 != null) {
             if (!v1.equals(v2))
-              false
+              return false
           } else // check if one is null and the other is not
           if (v1 != null || v2 != null)
-            false
+            return false
         }
 
         true
@@ -3287,22 +3292,23 @@ object Linq {
 
       if (values1.length != values2.length)
         false
+      else {
+        val count = values1.length
+        for (i <- 0 until count) {
+          val v1 = values1(i)
+          val v2 = values2(i)
 
-      val count = values1.length
-      for (i <- 0 until count) {
-        val v1 = values1(i)
-        val v2 = values2(i)
+          // compare using Equals if both not null
+          if (v1 != null && v2 != null) {
+            if (!v1.equals(v2))
+              return false
+          } else // check if one is null and the other is not
+          if (v1 != null || v2 != null)
+            return false
+        }
 
-        // compare using Equals if both not null
-        if (v1 != null && v2 != null) {
-          if (!v1.equals(v2))
-            false
-        } else // check if one is null and the other is not
-        if (v1 != null || v2 != null)
-          false
+        true
       }
-
-      true
     }
 
   /**
@@ -3314,6 +3320,49 @@ object Linq {
     {
       propel.core.utils.Linq.sequenceEqual(values1, values2)
     }
+
+  /**
+   * Returns true if the item sequences within two arrays are equal. Arrays may contain null elements.
+   *
+   * @throws NullPointerException An array is null
+   * @throws IllegalArgumentException Length is out of range.
+   * @throws IndexOutOfBoundsException Offsets are out of range.
+   * @throws ArithmeticException When very large numbers are used and overflow occurs.
+   */
+  def sequenceEqual[T](a: Array[T], offsetA: Int, b: Array[T], offsetB: Int, count: Int): Boolean =
+    {
+      if (a == null) throw new NullPointerException("array1")
+      if (b == null) throw new NullPointerException("array2")
+
+      if (count == 0)
+        true
+      else {
+        if (offsetA < 0) throw new IndexOutOfBoundsException("offsetA=" + offsetA)
+        if (offsetB < 0) throw new IndexOutOfBoundsException("offsetB=" + offsetB)
+
+        if (count < 0) throw new IllegalArgumentException("count=" + count)
+
+        if (offsetA + count > a.length || offsetA + count < 0) throw new IndexOutOfBoundsException("offsetA=" + offsetA + " count=" + count + " length=" + a.length)
+        if (offsetB + count > b.length || offsetB + count < 0) throw new IndexOutOfBoundsException("offsetB=" + offsetB + " count=" + count + " length=" + b.length)
+
+        // comparisons
+        for (i <- 0 to count) {
+          val elemA = a(offsetA + i)
+          val elemB = b(offsetB + i)
+
+          // check not null to use Equals
+          if (elemA != null && elemB != null) {
+            if (!elemA.equals(elemB))
+              return false
+          } else if (elemA != null || elemB != null)
+            return false
+        }
+
+        true
+      }
+    }
+
+  // TODO: sequenceEqual((a: Array[T], offsetA: Int, b: Array[T], offsetB: Int, count: Int)) for Iterable & Traversable types
 
   /**
    * Throws an exception if the given Traversable does not have a single element (e.g. none, 2, 3, etc.)
@@ -3741,6 +3790,55 @@ object Linq {
       val result = where(parts, elementsExistInList _)
       toArray(result)
     }
+
+  /**
+   * Swaps two elements in an array.
+   *
+   * @throws NullPointerException Array is null
+   * @throws IndexOutOfBoundsException Array indices are out of range.
+   */
+  def swap[T](array: Array[T], a: Int, b: Int): Unit =
+    {
+      if (array == null) throw new NullPointerException("array")
+      if (a < 0 || a >= array.length) throw new IndexOutOfBoundsException("a=" + a + " length=" + array.length)
+      if (b < 0 || b >= array.length) throw new IndexOutOfBoundsException("b=" + b + " length=" + array.length)
+
+      if (a != b) {
+        val value = array(a)
+        array(a) = array(b)
+        array(b) = value
+      }
+    }
+
+  /**
+   * Swaps two or more elements in an array.
+   *
+   * @throws NullPointerException Array is null
+   * @throws IllegalArgumentException The length of index arrays are not equal.
+   * @throws IndexOutOfBoundsException An array index in the indices is out of range
+   */
+  def swap[T](array: Array[T], a: Array[Int], b: Array[Int]): Unit =
+    {
+      if (array == null) throw new NullPointerException("array")
+      if (a == null) throw new NullPointerException("a")
+      if (b == null) throw new NullPointerException("b")
+
+      if (a.length != b.length) throw new IllegalArgumentException("a=" + a.length + " b=" + b.length)
+
+      for (i <- 0 to a.length) {
+        val posA = a(i)
+        val posB = b(i)
+
+        if (posA < 0 || posA >= array.length) throw new IndexOutOfBoundsException("posA=" + posA + " length=" + array.length)
+        if (posB < 0 || posB >= array.length) throw new IndexOutOfBoundsException("posB=" + posB + " length=" + array.length)
+
+        val value = array(posA)
+        array(posA) = array(posB)
+        array(posB) = value
+      }
+    }
+
+  // TODO: swap for List/Buffer types
 
   /**
    * Returns up to the specified number of elements from the given Traversable.
@@ -4555,9 +4653,9 @@ object Linq {
         // if a value is null, we cannot use equals
         if (x != null)
           if (x.equals(item))
-            true
+            return true
 
-      false
+      return false
     }
 
   /**
@@ -4572,9 +4670,9 @@ object Linq {
         // if a value is null, we cannot use equals
         if (x != null)
           if (x.equals(item))
-            true
+            return true
 
-      false
+      return false
     }
 
   /**
@@ -4586,9 +4684,9 @@ object Linq {
         // if a value is null, we cannot use equals
         if (x != null)
           if (comparer.compare(x, item) == 0)
-            true
+            return true
 
-      false
+      return false
     }
 
   /**
@@ -4602,10 +4700,10 @@ object Linq {
         // if a value is null, we cannot use equals
         if (x != null)
           if (comparer.compare(x, item) == 0)
-            true
+            return true
       }
 
-      false
+      return false
     }
 
   /**
@@ -4615,9 +4713,9 @@ object Linq {
     {
       for (x <- values)
         if (x == null)
-          true
+          return true
 
-      false
+      return false
     }
 
   /**
@@ -4627,9 +4725,9 @@ object Linq {
     {
       for (x <- values)
         if (x == null)
-          true
+          return true
 
-      false
+      return false
     }
 
   /**
@@ -4763,12 +4861,12 @@ object Linq {
       var i = 0
       for (item <- values) {
         if (item == null)
-          i
+          return i
 
         i = i + 1
       }
 
-      -1
+      return -1
     }
 
   /**
@@ -4781,12 +4879,12 @@ object Linq {
       var i = 0
       for (item <- values) {
         if (item == null)
-          i
+          return i
 
         i = i + 1
       }
 
-      -1
+      return -1
     }
 
   /**
@@ -4801,12 +4899,12 @@ object Linq {
       while (it.hasNext) {
         val item = it.next
         if (item == null)
-          i
+          return i
 
         i = i + 1
       }
 
-      -1
+      return -1
     }
 
   /**
@@ -4820,12 +4918,12 @@ object Linq {
       var i = 0
       for (item <- values) {
         if (element.equals(item))
-          i
+          return i
 
         i = i + 1
       }
 
-      -1
+      return -1
     }
 
   /**
@@ -4839,12 +4937,12 @@ object Linq {
       var i = 0
       for (item <- values) {
         if (element.equals(item))
-          i
+          return i
 
         i = i + 1
       }
 
-      -1
+      return -1
     }
 
   /**
@@ -4860,12 +4958,12 @@ object Linq {
       while (it.hasNext) {
         val item = it.next
         if (element.equals(item))
-          i
+          return i
 
         i = i + 1
       }
 
-      -1
+      return -1
     }
 
   /**
@@ -4880,12 +4978,12 @@ object Linq {
       var i = 0
       for (item <- values) {
         if (comparer.compare(element, item) == 0)
-          i
+          return i
 
         i = i + 1
       }
 
-      -1
+      return -1
     }
 
   /**
@@ -4900,12 +4998,12 @@ object Linq {
       var i = 0
       for (item <- values) {
         if (comparer.compare(element, item) == 0)
-          i
+          return i
 
         i = i + 1
       }
 
-      -1
+      return -1
     }
 
   /**
@@ -4922,12 +5020,12 @@ object Linq {
       while (it.hasNext) {
         val item = it.next
         if (comparer.compare(element, item) == 0)
-          i
+          return i
 
         i = i + 1
       }
 
-      -1
+      return -1
     }
 
   /**
@@ -4959,9 +5057,9 @@ object Linq {
       var count = values.length
       for (i <- count to 0)
         if (values(i) == null)
-          i
+          return i
 
-      -1
+      return -1
     }
 
   /**

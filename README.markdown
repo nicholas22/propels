@@ -129,6 +129,12 @@ There are plans to port certain things over to Scala (especially if they are usi
 
 ## Changelog
 
+#### 0.5: Upgrade
+Updated dependencies to latest versions
+
+#### 0.3/0.4: Bugfixing
+For comprehension "return"
+
 #### 0.2: Almost all functional classes ported
 ArrayUtils ported
 LINQ bugfixes  

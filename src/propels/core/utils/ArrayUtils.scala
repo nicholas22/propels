@@ -22,7 +22,7 @@ object ArrayUtils {
    */
   def add[T](array: Array[T], element: T): Array[T] =
     {
-      if (array == null) throw new NullPointerException("array");
+      if (array == null) throw new NullPointerException("array")
 
       val result = create[T](array.getClass.getComponentType, array.size + 1)
       System.arraycopy(array, 0, result, 0, array.length)
@@ -40,7 +40,7 @@ object ArrayUtils {
   def clear[T](array: Array[T]): Unit =
     {
       val default: T = Linq.defaultValue
-      clear(array, default);
+      clear(array, default)
     }
 
   /**
@@ -64,7 +64,7 @@ object ArrayUtils {
    */
   def clone[T](array: Array[T]): Array[T] =
     {
-      if (array == null) throw new NullPointerException("array");
+      if (array == null) throw new NullPointerException("array")
 
       val result = create[T](array.getClass.getComponentType, array.length)
       for (i <- 0 to array.length)
@@ -81,22 +81,22 @@ object ArrayUtils {
    */
   def count(array: AnyRef): Int =
     {
-      if (array == null) throw new NullPointerException("array");
+      if (array == null) throw new NullPointerException("array")
 
       // get the array type
-      val arrayType = getType(array);
+      val arrayType = getType(array)
 
       arrayType match {
-        case PrimitiveArrayType.NotPrimitive => array.asInstanceOf[Array[_]].length;
-        case PrimitiveArrayType.Char => array.asInstanceOf[Array[Char]].length;
-        case PrimitiveArrayType.Short => array.asInstanceOf[Array[Short]].length;
-        case PrimitiveArrayType.Int => array.asInstanceOf[Array[Int]].length;
-        case PrimitiveArrayType.Long => array.asInstanceOf[Array[Long]].length;
-        case PrimitiveArrayType.Float => array.asInstanceOf[Array[Float]].length;
-        case PrimitiveArrayType.Double => array.asInstanceOf[Array[Double]].length;
-        case PrimitiveArrayType.Boolean => array.asInstanceOf[Array[Boolean]].length;
-        case PrimitiveArrayType.Byte => array.asInstanceOf[Array[Byte]].length;
-        case _ => throw new IllegalArgumentException("Unrecognized array type: " + arrayType);
+        case PrimitiveArrayType.NotPrimitive => array.asInstanceOf[Array[_]].length
+        case PrimitiveArrayType.Char => array.asInstanceOf[Array[Char]].length
+        case PrimitiveArrayType.Short => array.asInstanceOf[Array[Short]].length
+        case PrimitiveArrayType.Int => array.asInstanceOf[Array[Int]].length
+        case PrimitiveArrayType.Long => array.asInstanceOf[Array[Long]].length
+        case PrimitiveArrayType.Float => array.asInstanceOf[Array[Float]].length
+        case PrimitiveArrayType.Double => array.asInstanceOf[Array[Double]].length
+        case PrimitiveArrayType.Boolean => array.asInstanceOf[Array[Boolean]].length
+        case PrimitiveArrayType.Byte => array.asInstanceOf[Array[Byte]].length
+        case _ => throw new IllegalArgumentException("Unrecognized array type: " + arrayType)
       }
     }
 
@@ -122,14 +122,14 @@ object ArrayUtils {
    */
   def create[T](value: T, length: Int): Array[T] =
     {
-      if (value == null) throw new NullPointerException("value");
-      if (length < 0) throw new IllegalArgumentException("length=" + length);
+      if (value == null) throw new NullPointerException("value")
+      if (length < 0) throw new IllegalArgumentException("length=" + length)
 
       val result: Array[T] = create(value.getClass(), length)
       for (i <- 0 to length)
-        result(i) = value;
+        result(i) = value
 
-      result;
+      result
     }
 
   /**
@@ -141,21 +141,21 @@ object ArrayUtils {
    */
   def create[T](value: T, lengthX: Int, lengthY: Int): Array[Array[T]] =
     {
-      if (value == null) throw new NullPointerException("value");
-      if (lengthX < 0) throw new IllegalArgumentException("lengthX=" + lengthX);
-      if (lengthY < 0) throw new IllegalArgumentException("lengthY=" + lengthY);
+      if (value == null) throw new NullPointerException("value")
+      if (lengthX < 0) throw new IllegalArgumentException("lengthX=" + lengthX)
+      if (lengthY < 0) throw new IllegalArgumentException("lengthY=" + lengthY)
 
-      val valueType = value.getClass();
+      val valueType = value.getClass()
       val array: Array[T] = create(valueType, 0)
       val result: Array[Array[T]] = create(array.getClass(), lengthX)
 
       for (x <- 0 to lengthX) {
         result(x) = create(valueType, lengthY)
         for (y <- 0 to lengthY)
-          result(x)(y) = value;
+          result(x)(y) = value
       }
 
-      result;
+      result
     }
 
   /**
@@ -169,7 +169,7 @@ object ArrayUtils {
    */
   def deepClone[T](array: Array[T]): Array[T] =
     {
-      if (array == null) throw new NullPointerException("array");
+      if (array == null) throw new NullPointerException("array")
 
       try {
         val result: Array[T] = create(array.getClass().getComponentType(), array.length)
@@ -177,13 +177,13 @@ object ArrayUtils {
         for (i <- 0 to array.length)
           if (array(i) != null) {
             val method = ReflectionUtils.getMethod(array(i).getClass(), "clone", true)
-            val item = method.invoke(array(i), null.asInstanceOf[Array[Object]]);
+            val item = method.invoke(array(i), null.asInstanceOf[Array[Object]])
             result(i) = item.asInstanceOf[T]
           }
 
-        result;
+        result
       } catch {
-        case e: Exception => throw new IllegalArgumentException(e);
+        case e: Exception => throw new IllegalArgumentException(e)
       }
     }
 
@@ -195,28 +195,28 @@ object ArrayUtils {
    */
   def getType(array: Any): PrimitiveArrayType =
     {
-      if (array == null) throw new NullPointerException("array");
+      if (array == null) throw new NullPointerException("array")
 
-      var className = array.getClass().getName();
+      var className = array.getClass().getName()
       if (className.charAt(0) != CONSTANT.BRACKET_OPEN_CHAR)
-        throw new IllegalArgumentException("The provided object is not an array: " + array.getClass());
+        throw new IllegalArgumentException("The provided object is not an array: " + array.getClass())
 
       // trim [ from class name
-      className = StringUtils.trimStart(className, Array(CONSTANT.BRACKET_OPEN_CHAR));
+      className = StringUtils.trimStart(className, Array(CONSTANT.BRACKET_OPEN_CHAR))
 
       if (className.length() < 1)
-        throw new IllegalArgumentException("The provided object is not an array: " + array.getClass());
+        throw new IllegalArgumentException("The provided object is not an array: " + array.getClass())
 
       className.charAt(0) match {
-        case 'C' => PrimitiveArrayType.Char;
-        case 'I' => PrimitiveArrayType.Int;
-        case 'J' => PrimitiveArrayType.Long;
-        case 'S' => PrimitiveArrayType.Short;
-        case 'B' => PrimitiveArrayType.Byte;
-        case 'F' => PrimitiveArrayType.Float;
-        case 'D' => PrimitiveArrayType.Double;
-        case 'Z' => PrimitiveArrayType.Boolean;
-        case _ => PrimitiveArrayType.NotPrimitive;
+        case 'C' => PrimitiveArrayType.Char
+        case 'I' => PrimitiveArrayType.Int
+        case 'J' => PrimitiveArrayType.Long
+        case 'S' => PrimitiveArrayType.Short
+        case 'B' => PrimitiveArrayType.Byte
+        case 'F' => PrimitiveArrayType.Float
+        case 'D' => PrimitiveArrayType.Double
+        case 'Z' => PrimitiveArrayType.Boolean
+        case _ => PrimitiveArrayType.NotPrimitive
       }
     }
 
@@ -229,17 +229,17 @@ object ArrayUtils {
   def getDimensions(array: Any): Int =
     {
       if (array == null)
-        throw new NullPointerException("array");
+        throw new NullPointerException("array")
 
-      var className = array.getClass().getName();
+      var className = array.getClass().getName()
       if (className.charAt(0) != CONSTANT.BRACKET_OPEN_CHAR)
-        throw new IllegalArgumentException("The provided object is not an array: " + array.getClass());
+        throw new IllegalArgumentException("The provided object is not an array: " + array.getClass())
 
       // trim [ from class name
-      var result = 0;
+      var result = 0
       while (className.startsWith(CONSTANT.BRACKET_OPEN)) {
         result = result + 1
-        className = className.substring(1);
+        className = className.substring(1)
       }
 
       result
@@ -253,22 +253,23 @@ object ArrayUtils {
    */
   def join[T](first: Array[T], second: Array[T]): Array[T] =
     {
-      if (first == null) throw new NullPointerException("first");
-      if (second == null) throw new NullPointerException("second");
+      if (first == null) throw new NullPointerException("first")
+      if (second == null) throw new NullPointerException("second")
 
       if (second.length == 0)
-        first;
+        first
       else if (first.length == 0)
-        second;
+        second
+      else {
+        val firstLen = first.length
+        val secondLen = second.length
+        val totalLen = firstLen + secondLen
+        val result = resize(first, totalLen)
 
-      val firstLen = first.length;
-      val secondLen = second.length;
-      val totalLen = firstLen + secondLen;
-      val result = resize(first, totalLen);
+        System.arraycopy(second, 0, result, firstLen, secondLen)
 
-      System.arraycopy(second, 0, result, firstLen, secondLen);
-
-      result
+        result
+      }
     }
 
   /**
@@ -279,36 +280,36 @@ object ArrayUtils {
    */
   def join[T](arrays: Traversable[Array[T]]): Array[T] =
     {
-      if (arrays == null) throw new NullPointerException("arrays");
+      if (arrays == null) throw new NullPointerException("arrays")
 
-      var componentType: Class[_] = null;
+      var componentType: Class[_] = null
 
       // determine full length
-      var length = 0;
+      var length = 0
       for (array <- arrays)
         if (array != null) {
-          length += array.length;
+          length += array.length
           // determine array component type
           if (componentType == null)
-            componentType = arrays.getClass().getComponentType();
+            componentType = arrays.getClass().getComponentType()
         }
 
       if (componentType == null)
-        throw new IllegalStateException("Cannot determine component type from array collection.");
+        throw new IllegalStateException("Cannot determine component type from array collection.")
 
       // create big array
       val result: Array[T] = create(componentType, length)
 
       // copy all elements over
-      var index = 0;
+      var index = 0
       for (array <- arrays)
         if (array != null)
           for (item <- array) {
-            result(index) = item;
-            index = index + 1;
+            result(index) = item
+            index = index + 1
           }
 
-      result;
+      result
     }
 
   /**
@@ -318,12 +319,12 @@ object ArrayUtils {
    */
   def prepend[T](array: Array[T], element: T): Array[T] =
     {
-      if (array == null) throw new NullPointerException("array");
+      if (array == null) throw new NullPointerException("array")
 
-      val result: Array[T] = create(array.getClass().getComponentType(), array.length + 1);
-      System.arraycopy(array, 0, result, 1, array.length);
-      result(0) = element;
-      result;
+      val result: Array[T] = create(array.getClass().getComponentType(), array.length + 1)
+      System.arraycopy(array, 0, result, 1, array.length)
+      result(0) = element
+      result
     }
 
   /**
@@ -334,7 +335,7 @@ object ArrayUtils {
    */
   def remove[T](array: Array[T], element: T): Array[T] =
     {
-      if (array == null) throw new NullPointerException("array");
+      if (array == null) throw new NullPointerException("array")
 
       val index = Linq.indexOf[T](array, element)
       if (index < 0)
@@ -351,7 +352,7 @@ object ArrayUtils {
    */
   def removeAll[T](array: Array[T], element: T): Array[T] =
     {
-      if (array == null) throw new NullPointerException("array");
+      if (array == null) throw new NullPointerException("array")
 
       var result = array
       while (array.length > 0 && Linq.indexOf(array, element) >= 0)
@@ -368,15 +369,15 @@ object ArrayUtils {
    */
   def remove[T](array: Array[T], index: Int): Array[T] =
     {
-      if (array == null) throw new NullPointerException("array");
-      if (index < 0 || index >= array.length) throw new IndexOutOfBoundsException("index=" + index + " length=" + array.length);
+      if (array == null) throw new NullPointerException("array")
+      if (index < 0 || index >= array.length) throw new IndexOutOfBoundsException("index=" + index + " length=" + array.length)
 
       val result = create[T](array.getClass.getComponentType, array.length - 1)
 
       if (index > 0)
-        System.arraycopy(array, 0, result, 0, index);
+        System.arraycopy(array, 0, result, 0, index)
       if (index != array.length - 1)
-        System.arraycopy(array, index + 1, result, index, array.length - index - 1);
+        System.arraycopy(array, index + 1, result, index, array.length - index - 1)
 
       result
     }
@@ -391,27 +392,28 @@ object ArrayUtils {
    */
   def resize[T](array: Array[T], length: Int): Array[T] =
     {
-      if (array == null) throw new NullPointerException("array");
-      if (length < 0) throw new IllegalArgumentException("length=" + length);
+      if (array == null) throw new NullPointerException("array")
+      if (length < 0) throw new IllegalArgumentException("length=" + length)
 
-      val oldLength = array.length;
+      val oldLength = array.length
 
       // check if the sizes match
       if (length == oldLength)
         array
+      else {
+        // create new array
+        val newArray: Array[T] = create(array.getClass().getComponentType(), length)
 
-      // create new array
-      val newArray: Array[T] = create(array.getClass().getComponentType(), length)
+        // select strategy based on given scenario
+        if (length > oldLength)
+          // newer is larger, use old size as upper bound
+          System.arraycopy(array, 0, newArray, 0, oldLength)
+        else
+          // newer is smaller, use new size as upper bound
+          System.arraycopy(array, 0, newArray, 0, length)
 
-      // select strategy based on given scenario
-      if (length > oldLength)
-        // newer is larger, use old size as upper bound
-        System.arraycopy(array, 0, newArray, 0, oldLength);
-      else
-        // newer is smaller, use new size as upper bound
-        System.arraycopy(array, 0, newArray, 0, length);
-
-      return newArray;
+        newArray
+      }
     }
 
   /**
@@ -421,18 +423,25 @@ object ArrayUtils {
    */
   def reverse[T](array: Array[T]): Array[T] =
     {
-      if (array == null) throw new NullPointerException("array");
+      if (array == null) throw new NullPointerException("array")
 
-      var item: T = Linq.defaultValue
-      var index = 0;
-      for (i <- 0 to array.length) {
-        item = array(i);
-        index = array.length - i - 1;
-        array(i) = array(index);
-        array(index) = item;
+      if (array.length > 1) {
+        var left = 0 // index of leftmost element
+        var right = array.length - 1 // index of rightmost element
+
+        while (left < right) {
+          // exchange the left and right elements
+          val temp = array(left)
+          array(left) = array(right)
+          array(right) = temp
+
+          // move the bounds toward the center
+          left += 1
+          right -= 1
+        }
       }
 
-      array;
+      array
     }
 
   /**
@@ -442,55 +451,15 @@ object ArrayUtils {
    */
   def reverseCopy[T](array: Array[T]): Array[T] =
     {
-      if (array == null) throw new NullPointerException("array");
+      if (array == null) throw new NullPointerException("array")
 
-      val length = array.length;
-      val result: Array[T] = create(array.getClass().getComponentType(), length);
+      val length = array.length
+      val result: Array[T] = create(array.getClass().getComponentType(), length)
 
       for (i <- 0 to length)
-        result(length - i - 1) = array(i)
+        result(i) = array(length - 1 - i);
 
-      result;
-    }
-
-  /**
-   * Returns true if the item sequences within two arrays are equal. Arrays may contain null elements.
-   *
-   * @throws NullPointerException An array is null
-   * @throws IllegalArgumentException Length is out of range.
-   * @throws IndexOutOfBoundsException Offsets are out of range.
-   * @throws ArithmeticException When very large numbers are used and overflow occurs.
-   */
-  def sequenceEqual[T](a: Array[T], offsetA: Int, b: Array[T], offsetB: Int, count: Int): Boolean =
-    {
-      if (a == null) throw new NullPointerException("array1");
-      if (b == null) throw new NullPointerException("array2");
-
-      if (count == 0)
-        true;
-
-      if (offsetA < 0) throw new IndexOutOfBoundsException("offsetA=" + offsetA);
-      if (offsetB < 0) throw new IndexOutOfBoundsException("offsetB=" + offsetB);
-
-      if (count < 0) throw new IllegalArgumentException("count=" + count);
-
-      if (offsetA + count > a.length || offsetA + count < 0) throw new IndexOutOfBoundsException("offsetA=" + offsetA + " count=" + count + " length=" + a.length);
-      if (offsetB + count > b.length || offsetB + count < 0) throw new IndexOutOfBoundsException("offsetB=" + offsetB + " count=" + count + " length=" + b.length);
-
-      // comparisons
-      for (i <- 0 to count) {
-        val elemA = a(offsetA + i)
-        val elemB = b(offsetB + i)
-
-        // check not null to use Equals
-        if (elemA != null && elemB != null) {
-          if (!elemA.equals(elemB))
-            false;
-        } else if (elemA != null || elemB != null)
-          false;
-      }
-
-      true;
+      result
     }
 
   /**
@@ -501,62 +470,15 @@ object ArrayUtils {
    */
   def subArray[T](array: Array[T], startIndex: Int, endIndex: Int): Array[T] =
     {
-      if (array == null) throw new NullPointerException("array");
+      if (array == null) throw new NullPointerException("array")
 
-      if (startIndex < 0 || startIndex > endIndex) throw new IndexOutOfBoundsException("startIndex=" + startIndex + " endIndex=" + endIndex);
-      if (endIndex > array.length) throw new IndexOutOfBoundsException("endIndex=" + endIndex + " length=" + array.length);
+      if (startIndex < 0 || startIndex > endIndex) throw new IndexOutOfBoundsException("startIndex=" + startIndex + " endIndex=" + endIndex)
+      if (endIndex > array.length) throw new IndexOutOfBoundsException("endIndex=" + endIndex + " length=" + array.length)
 
-      val result: Array[T] = create(array.getClass().getComponentType(), endIndex - startIndex);
-      System.arraycopy(array, startIndex, result, 0, endIndex - startIndex);
+      val result: Array[T] = create(array.getClass().getComponentType(), endIndex - startIndex)
+      System.arraycopy(array, startIndex, result, 0, endIndex - startIndex)
 
-      result;
-    }
-
-  /**
-   * Swaps two elements in an array.
-   *
-   * @throws NullPointerException Array is null
-   * @throws IndexOutOfBoundsException Array indices are out of range.
-   */
-  def swap[T](array: Array[T], a: Int, b: Int): Unit =
-    {
-      if (array == null) throw new NullPointerException("array");
-      if (a < 0 || a >= array.length) throw new IndexOutOfBoundsException("a=" + a + " length=" + array.length);
-      if (b < 0 || b >= array.length) throw new IndexOutOfBoundsException("b=" + b + " length=" + array.length);
-
-      if (a != b) {
-        val value = array(a)
-        array(a) = array(b);
-        array(b) = value;
-      }
-    }
-
-  /**
-   * Swaps two or more elements in an array.
-   *
-   * @throws NullPointerException Array is null
-   * @throws IllegalArgumentException The length of index arrays are not equal.
-   * @throws IndexOutOfBoundsException An array index in the indices is out of range
-   */
-  def swap[T](array: Array[T], a: Array[Int], b: Array[Int]): Unit =
-    {
-      if (array == null) throw new NullPointerException("array");
-      if (a == null) throw new NullPointerException("a");
-      if (b == null) throw new NullPointerException("b");
-
-      if (a.length != b.length) throw new IllegalArgumentException("a=" + a.length + " b=" + b.length);
-
-      for (i <- 0 to a.length) {
-        val posA = a(i);
-        val posB = b(i);
-
-        if (posA < 0 || posA >= array.length) throw new IndexOutOfBoundsException("posA=" + posA + " length=" + array.length);
-        if (posB < 0 || posB >= array.length) throw new IndexOutOfBoundsException("posB=" + posB + " length=" + array.length);
-
-        val value = array(posA);
-        array(posA) = array(posB);
-        array(posB) = value;
-      }
+      result
     }
 
   /**
@@ -566,8 +488,8 @@ object ArrayUtils {
    */
   def toArrayList[T](array: Array[T]): ArrayList[T] =
     {
-      if (array == null) throw new NullPointerException("array");
-      
+      if (array == null) throw new NullPointerException("array")
+
       val result = new ArrayList[T](array.length)
       for (item <- array)
         result.add(item)
@@ -582,8 +504,8 @@ object ArrayUtils {
    */
   def toBuffer[T](from: Array[T], to: Buffer[T]): Unit =
     {
-      if (from == null) throw new NullPointerException("from");
-      if (to == null) throw new NullPointerException("to");
+      if (from == null) throw new NullPointerException("from")
+      if (to == null) throw new NullPointerException("to")
 
       for (item <- from)
         to += item
@@ -596,11 +518,11 @@ object ArrayUtils {
    */
   def toCollection[T](from: Array[T], to: java.util.Collection[T]): Unit =
     {
-      if (from == null) throw new NullPointerException("from");
-      if (to == null) throw new NullPointerException("to");
+      if (from == null) throw new NullPointerException("from")
+      if (to == null) throw new NullPointerException("to")
 
       for (item <- from)
-        to.add(item);
+        to.add(item)
     }
 
   /**
@@ -610,8 +532,8 @@ object ArrayUtils {
    */
   def toReifiedList[T <: AnyRef](array: Array[T]): ReifiedList[T] =
     {
-      if (array == null) throw new NullPointerException("array");
-      new ReifiedArrayList[T](array);
+      if (array == null) throw new NullPointerException("array")
+      new ReifiedArrayList[T](array)
     }
 
   /**
@@ -621,13 +543,13 @@ object ArrayUtils {
    */
   def toSortedList[T <: Comparable[T]](array: Array[T]): SortedList[T] =
     {
-      if (array == null) throw new NullPointerException("array");
+      if (array == null) throw new NullPointerException("array")
 
-      val result = new SortedList[T](array.getClass().getComponentType());
+      val result = new SortedList[T](array.getClass().getComponentType())
       for (element <- array)
-        result.add(element);
+        result.add(element)
 
-      result;
+      result
     }
 
   /**
@@ -637,13 +559,13 @@ object ArrayUtils {
    */
   def toSortedList[T <: Comparable[T]](array: Array[T], comparer: Comparator[T]): SortedList[T] =
     {
-      if (array == null) throw new NullPointerException("array");
+      if (array == null) throw new NullPointerException("array")
 
-      val result = new SortedList[T](comparer, array.getClass().getComponentType());
+      val result = new SortedList[T](comparer, array.getClass().getComponentType())
       for (element <- array)
-        result.add(element);
+        result.add(element)
 
-      result;
+      result
     }
 
   /**
@@ -653,14 +575,14 @@ object ArrayUtils {
    */
   def toLinkedList[T <: AnyRef](array: Array[T]): ReifiedLinkedList[T] =
     {
-      if (array == null) throw new NullPointerException("array");
+      if (array == null) throw new NullPointerException("array")
 
-      val result = new ReifiedLinkedList[T](array);
+      val result = new ReifiedLinkedList[T](array)
 
       for (item <- array)
-        result.addLast(item);
+        result.addLast(item)
 
-      result;
+      result
     }
 
   /* REMOVED: unbox() */
