@@ -1,0 +1,36 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.github.nicholas22</groupId>
+  <artifactId>propels-core</artifactId>
+  <packaging>jar</packaging>
+  <name>propels</name>
+  <version>1.0</version>
+  <description>The Scala port of the JPropel library</description>
+  <url>https://github.com/nicholas22/propels</url>
+  <licenses>
+    <license>
+      <name>GNU LESSER GENERAL PUBLIC LICENSE, Version 3.0</name>
+      <url>http://www.gnu.org/copyleft/lesser.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <connection>git://github.com/nicholas22/propels.git</connection>
+    <url>https://github.com/nicholas22/propels</url>
+  </scm>
+  <developers>
+    <developer>
+      <id>nicholas22</id>
+      <name>Nick Tountas</name>
+      <email>salam.kaser@gmail.com</email>
+    </developer>
+  </developers>
+  
+  <dependencies>
+    <dependency>
+      <groupId>com.github.nicholas22</groupId>
+      <artifactId>propel-core</artifactId>
+      <version>1.0.4</version>
+    </dependency>
+  </dependencies>
+</project>
