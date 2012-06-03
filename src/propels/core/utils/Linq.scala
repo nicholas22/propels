@@ -400,37 +400,37 @@ object Linq {
   /**
    * Returns true if an item is contained in a Traversable. Scans the sequence linearly. You may scan for nulls.
    *
-   * @throws NullPointerException When the values argument or the comparer is null.
+   * @throws NullPointerException When the values argument or the comparator is null.
    */
-  def contains[T](values: Traversable[T], item: T, comparer: Comparator[T]): Boolean =
+  def contains[T](values: Traversable[T], item: T, comparison: ((T, T) => Int)): Boolean =
     {
       if (item == null)
         containsNull(values)
       else
-        containsNonNull(values, item, comparer)
+        containsNonNull(values, item, ComparatorUtils.toComparator(comparison))
     }
 
   /**
    * Returns true if an item is contained in an array. Scans the sequence linearly. You may scan for nulls.
    *
-   * @throws NullPointerException When the array or the comparer is null.
+   * @throws NullPointerException When the array or the comparator is null.
    */
-  def contains[T](values: Array[T], item: T, comparer: Comparator[T]): Boolean =
+  def contains[T](values: Array[T], item: T, comparison: ((T, T) => Int)): Boolean =
     {
       if (item == null)
         containsNull(values)
       else
-        containsNonNull(values, item, comparer)
+        containsNonNull(values, item, ComparatorUtils.toComparator(comparison))
     }
 
   /**
    * Returns true if an item is contained in a JDK iterable. Scans the sequence linearly. You may scan for nulls.
    *
-   * @throws NullPointerException When the array or the comparer is null.
+   * @throws NullPointerException When the array or the comparator is null.
    */
-  def contains[T](values: java.lang.Iterable[T], item: T, comparer: Comparator[T]): Boolean =
+  def contains[T](values: java.lang.Iterable[T], item: T, comparison: ((T, T) => Int)): Boolean =
     {
-      propel.core.utils.Linq.contains(values, item, comparer)
+      propel.core.utils.Linq.contains(values, item, ComparatorUtils.toComparator(comparison))
     }
 
   /**
@@ -441,7 +441,6 @@ object Linq {
    */
   def containsAny[T](values: Traversable[T], items: Traversable[T]): Boolean =
     {
-      if (values == null) throw new NullPointerException("values")
       if (items == null) throw new NullPointerException("items")
 
       for (item <- items)
@@ -459,7 +458,6 @@ object Linq {
    */
   def containsAny[T](values: Array[T], items: Array[T]): Boolean =
     {
-      if (values == null) throw new NullPointerException("values")
       if (items == null) throw new NullPointerException("items")
 
       for (item <- items)
@@ -486,13 +484,12 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null.
    */
-  def containsAny[T](values: Traversable[T], items: Traversable[T], comparer: Comparator[T]): Boolean =
+  def containsAny[T](values: Traversable[T], items: Traversable[T], comparison: ((T, T) => Int)): Boolean =
     {
-      if (values == null) throw new NullPointerException("values")
       if (items == null) throw new NullPointerException("items")
 
       for (item <- items)
-        if (contains(values, item, comparer))
+        if (contains(values, item, comparison))
           return true
 
       return false
@@ -504,13 +501,12 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null.
    */
-  def containsAny[T](values: Array[T], items: Array[T], comparer: Comparator[T]): Boolean =
+  def containsAny[T](values: Array[T], items: Array[T], comparison: ((T, T) => Int)): Boolean =
     {
-      if (values == null) throw new NullPointerException("values")
       if (items == null) throw new NullPointerException("items")
 
       for (item <- items)
-        if (contains(values, item, comparer))
+        if (contains(values, item, comparison))
           return true
 
       return false
@@ -522,15 +518,14 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null.
    */
-  def containsAny[T](values: java.lang.Iterable[T], items: java.lang.Iterable[T], comparer: Comparator[T]): Boolean =
+  def containsAny[T](values: java.lang.Iterable[T], items: java.lang.Iterable[T], comparison: ((T, T) => Int)): Boolean =
     {
-      if (values == null) throw new NullPointerException("values")
       if (items == null) throw new NullPointerException("items")
 
       val it = items.iterator
       while (it.hasNext) {
         val item = it.next
-        if (contains(values, item, comparer))
+        if (contains(values, item, comparison))
           return true
       }
 
@@ -545,7 +540,6 @@ object Linq {
    */
   def containsAll[T](values: Traversable[T], items: Traversable[T]): Boolean =
     {
-      if (values == null) throw new NullPointerException("values")
       if (items == null) throw new NullPointerException("items")
 
       for (item <- items)
@@ -563,7 +557,6 @@ object Linq {
    */
   def containsAll[T](values: Array[T], items: Array[T]): Boolean =
     {
-      if (values == null) throw new NullPointerException("values")
       if (items == null) throw new NullPointerException("items")
 
       for (item <- items)
@@ -581,7 +574,6 @@ object Linq {
    */
   def containsAll[T](values: java.lang.Iterable[T], items: java.lang.Iterable[T]): Boolean =
     {
-      if (values == null) throw new NullPointerException("values")
       if (items == null) throw new NullPointerException("items")
 
       val it = items.iterator
@@ -667,12 +659,12 @@ object Linq {
    *
    * @throws NullPointerException When the values argument is null.
    */
-  def count[T](values: Traversable[T], item: T, comparer: Comparator[T]): Int =
+  def count[T](values: Traversable[T], item: T, comparison: ((T, T) => Int)): Int =
     {
       if (item == null)
         countNulls(values)
       else
-        countNonNull(values, item, comparer)
+        countNonNull(values, item, ComparatorUtils.toComparator(comparison))
     }
 
   /**
@@ -680,12 +672,12 @@ object Linq {
    *
    * @throws NullPointerException When the values argument is null.
    */
-  def count[T](values: Array[T], item: T, comparer: Comparator[T]): Int =
+  def count[T](values: Array[T], item: T, comparison: ((T, T) => Int)): Int =
     {
       if (item == null)
         countNulls(values)
       else
-        countNonNull(values, item, comparer)
+        countNonNull(values, item, ComparatorUtils.toComparator(comparison))
     }
 
   /**
@@ -693,9 +685,9 @@ object Linq {
    *
    * @throws NullPointerException When the values argument is null.
    */
-  def count[T](values: java.lang.Iterable[T], item: T, comparer: Comparator[T]): Int =
+  def count[T](values: java.lang.Iterable[T], item: T, comparison: ((T, T) => Int)): Int =
     {
-      propel.core.utils.Linq.count(values, item, comparer)
+      propel.core.utils.Linq.count(values, item, ComparatorUtils.toComparator(comparison))
     }
 
   /**
@@ -840,17 +832,17 @@ object Linq {
     }
 
   /**
-   * Returns distinct (i.e. no duplicate) elements from a Traversable. Uses the specified comparer to identify duplicates.
+   * Returns distinct (i.e. no duplicate) elements from a Traversable. Uses the specified comparator to identify duplicates.
    *
    * @throws NullPointerException When the values argument is null.
    */
-  def distinct[T](values: Traversable[T], comparer: Comparator[T]): Traversable[T] =
+  def distinct[T](values: Traversable[T], comparison: ((T, T) => Int)): Traversable[T] =
     {
       if (values == null) throw new NullPointerException("values")
 
       var set: java.util.Set[T] = null
-      if (comparer != null)
-        set = new TreeSet[T](comparer)
+      if (comparison != null)
+        set = new TreeSet[T](ComparatorUtils.toComparator(comparison))
       else
         set = new TreeSet[T]()
 
@@ -865,17 +857,17 @@ object Linq {
     }
 
   /**
-   * Returns distinct (i.e. no duplicate) elements from an array. Uses the specified comparer to identify duplicates.
+   * Returns distinct (i.e. no duplicate) elements from an array. Uses the specified comparator to identify duplicates.
    *
    * @throws NullPointerException When the values argument is null.
    */
-  def distinct[T](values: Array[T], comparer: Comparator[T])(implicit manifest: ClassManifest[T]): Array[T] =
+  def distinct[T](values: Array[T], comparison: ((T, T) => Int))(implicit manifest: ClassManifest[T]): Array[T] =
     {
       if (values == null) throw new NullPointerException("values")
 
       var set: java.util.Set[T] = null
-      if (comparer != null)
-        set = new TreeSet[T](comparer)
+      if (comparison != null)
+        set = new TreeSet[T](ComparatorUtils.toComparator(comparison))
       else
         set = new TreeSet[T]()
 
@@ -890,13 +882,16 @@ object Linq {
     }
 
   /**
-   * Returns distinct (i.e. no duplicate) elements from a JDK Iterable. Uses the specified comparer to identify duplicates.
+   * Returns distinct (i.e. no duplicate) elements from a JDK Iterable. Uses the specified comparator to identify duplicates.
    *
    * @throws NullPointerException When the values argument is null.
    */
-  def distinct[T](values: java.lang.Iterable[T], comparer: Comparator[T]): java.lang.Iterable[T] =
+  def distinct[T](values: java.lang.Iterable[T], comparison: ((T, T) => Int)): java.lang.Iterable[T] =
     {
-      propel.core.utils.Linq.distinct(values, comparer)
+      if (comparison == null)
+        propel.core.utils.Linq.distinct(values)
+      else
+        propel.core.utils.Linq.distinct(values, ComparatorUtils.toComparator(comparison))
     }
 
   /**
@@ -1029,7 +1024,7 @@ object Linq {
    *
    * @throws NullPointerException When the values or removedValues argument is null.
    */
-  def except[T](values: Traversable[T], removedValues: Traversable[T], comparer: Comparator[T]): Traversable[T] =
+  def except[T](values: Traversable[T], removedValues: Traversable[T], comparison: ((T, T) => Int)): Traversable[T] =
     {
       if (values == null) throw new NullPointerException("values")
       if (removedValues == null) throw new NullPointerException("removedValues")
@@ -1037,13 +1032,8 @@ object Linq {
       var distinctValues: Traversable[T] = null
       var distinctRemovedValues: Traversable[T] = null
 
-      if (comparer == null) {
-        distinctValues = distinct(values)
-        distinctRemovedValues = distinct(removedValues)
-      } else {
-        distinctValues = distinct(values, comparer)
-        distinctRemovedValues = distinct(removedValues, comparer)
-      }
+      distinctValues = distinct(values, comparison)
+      distinctRemovedValues = distinct(removedValues, comparison)
 
       val result = new ArrayBuffer[T](DEFAULT_LIST_SIZE)
       for (item <- distinctValues)
@@ -1058,7 +1048,7 @@ object Linq {
    *
    * @throws NullPointerException When the values or removedValues argument is null.
    */
-  def except[T](values: Array[T], removedValues: Array[T], comparer: Comparator[T])(implicit manifest: ClassManifest[T]): Array[T] =
+  def except[T](values: Array[T], removedValues: Array[T], comparison: ((T, T) => Int))(implicit manifest: ClassManifest[T]): Array[T] =
     {
       if (values == null) throw new NullPointerException("values")
       if (removedValues == null) throw new NullPointerException("removedValues")
@@ -1066,13 +1056,8 @@ object Linq {
       var distinctValues: Array[T] = null
       var distinctRemovedValues: Array[T] = null
 
-      if (comparer == null) {
-        distinctValues = distinct(values)
-        distinctRemovedValues = distinct(removedValues)
-      } else {
-        distinctValues = distinct(values, comparer)
-        distinctRemovedValues = distinct(removedValues, comparer)
-      }
+      distinctValues = distinct(values, comparison)
+      distinctRemovedValues = distinct(removedValues, comparison)
 
       val result = new ArrayBuffer[T](DEFAULT_LIST_SIZE)
       for (item <- distinctValues)
@@ -1087,9 +1072,12 @@ object Linq {
    *
    * @throws NullPointerException When the values or removedValues argument is null.
    */
-  def except[T](values: java.lang.Iterable[T], removedValues: java.lang.Iterable[T], comparer: Comparator[T]): java.lang.Iterable[T] =
+  def except[T](values: java.lang.Iterable[T], removedValues: java.lang.Iterable[T], comparison: ((T, T) => Int)): java.lang.Iterable[T] =
     {
-      propel.core.utils.Linq.except(values, removedValues, comparer)
+      if (comparison == null)
+        propel.core.utils.Linq.except(values, removedValues)
+      else
+        propel.core.utils.Linq.except(values, removedValues, ComparatorUtils.toComparator(comparison))
     }
 
   /**
@@ -1285,6 +1273,43 @@ object Linq {
     }
 
   /**
+   * Executes an action against all elements, returning them
+   *
+   * @throws NullPointerException When an argument is null.
+   */
+  def forAll[T](values: Traversable[T], action: (T => Unit)): Traversable[T] = {
+    for (v <- values)
+      action.apply(v)
+
+    values
+  }
+
+  /**
+   * Executes an action against all elements, returning them
+   *
+   * @throws NullPointerException When an argument is null.
+   */
+  def forAll[T](values: Array[T], action: (T => Unit)): Array[T] = {
+    for (v <- values)
+      action.apply(v)
+
+    values
+  }
+
+  /**
+   * Executes an action against all elements, returning them
+   *
+   * @throws NullPointerException When an argument is null.
+   */
+  def forAll[T](values: java.lang.Iterable[T], action: (T => Unit)): java.lang.Iterable[T] = {
+    val it = values.iterator
+    while (it.hasNext)
+      action.apply(it.next)
+
+    values
+  }
+
+  /**
    * Groups elements by a specified key.
    *
    * @throws NullPointerException When an argument is null.
@@ -1315,20 +1340,20 @@ object Linq {
     }
 
   /**
-   * Groups elements by a specified key and comparer.
+   * Groups elements by a specified key and comparator.
    *
    * @throws NullPointerException When the values argument or the key selector is null.
    */
-  def groupBy[TKey, TResult](values: Traversable[TResult], keySelector: (TResult => TKey), comparer: Comparator[TKey]): Traversable[TResult] =
+  def groupBy[TKey, TResult](values: Traversable[TResult], keySelector: (TResult => TKey), comparison: ((TKey, TKey) => Int)): Traversable[TResult] =
     {
       if (values == null) throw new NullPointerException("values")
       if (keySelector == null) throw new NullPointerException("keySelector")
 
       var lookup: java.util.Map[TKey, TResult] = null
-      if (comparer == null)
+      if (comparison == null)
         lookup = new TreeMap[TKey, TResult]()
       else
-        lookup = new TreeMap[TKey, TResult](comparer)
+        lookup = new TreeMap[TKey, TResult](ComparatorUtils.toComparator(comparison))
 
       for (item <- values) {
         val key = keySelector(item)
@@ -1350,20 +1375,20 @@ object Linq {
     }
 
   /**
-   * Groups elements by a specified key and comparer.
+   * Groups elements by a specified key and comparator.
    *
    * @throws NullPointerException When the values argument or the key selector is null.
    */
-  def groupBy[TKey, TResult](values: Array[TResult], keySelector: (TResult => TKey), comparer: Comparator[TKey])(implicit manifest: ClassManifest[TResult]): Array[TResult] =
+  def groupBy[TKey, TResult](values: Array[TResult], keySelector: (TResult => TKey), comparison: ((TKey, TKey) => Int))(implicit manifest: ClassManifest[TResult]): Array[TResult] =
     {
       if (values == null) throw new NullPointerException("values")
       if (keySelector == null) throw new NullPointerException("keySelector")
 
       var lookup: java.util.Map[TKey, TResult] = null
-      if (comparer == null)
+      if (comparison == null)
         lookup = new TreeMap[TKey, TResult]()
       else
-        lookup = new TreeMap[TKey, TResult](comparer)
+        lookup = new TreeMap[TKey, TResult](ComparatorUtils.toComparator(comparison))
 
       for (item <- values) {
         val key = keySelector(item)
@@ -1385,20 +1410,20 @@ object Linq {
     }
 
   /**
-   * Groups elements by a specified key and comparer.
+   * Groups elements by a specified key and comparator.
    *
    * @throws NullPointerException When the values argument or the key selector is null.
    */
-  def groupBy[TKey, TResult](values: java.lang.Iterable[TResult], keySelector: (TResult => TKey), comparer: Comparator[TKey]): java.lang.Iterable[TResult] =
+  def groupBy[TKey, TResult](values: java.lang.Iterable[TResult], keySelector: (TResult => TKey), comparison: ((TKey, TKey) => Int)): java.lang.Iterable[TResult] =
     {
       if (values == null) throw new NullPointerException("values")
       if (keySelector == null) throw new NullPointerException("keySelector")
 
       var lookup: java.util.Map[TKey, TResult] = null
-      if (comparer == null)
+      if (comparison == null)
         lookup = new TreeMap[TKey, TResult]()
       else
-        lookup = new TreeMap[TKey, TResult](comparer)
+        lookup = new TreeMap[TKey, TResult](ComparatorUtils.toComparator(comparison))
 
       val vit = values.iterator
       while (vit.hasNext) {
@@ -1463,14 +1488,14 @@ object Linq {
   /**
    * Returns the index where the specified element is first found. You may search for nulls. If the element is not found, this returns -1.
    *
-   * @throws NullPointerException When the values or the comparer argument is null.
+   * @throws NullPointerException When the values or the comparator argument is null.
    */
-  def indexOf[T](values: Traversable[T], element: T, comparer: Comparator[T]): Int =
+  def indexOf[T](values: Traversable[T], element: T, comparison: ((T, T) => Int)): Int =
     {
       if (element == null)
         indexOfNull(values)
       else
-        indexOfNotNull(values, element, comparer)
+        indexOfNotNull(values, element, ComparatorUtils.toComparator(comparison))
     }
 
   /**
@@ -1478,12 +1503,12 @@ object Linq {
    *
    * @throws NullPointerException When the values argument is null.
    */
-  def indexOf[T](values: Array[T], element: T, comparer: Comparator[T]): Int =
+  def indexOf[T](values: Array[T], element: T, comparison: ((T, T) => Int)): Int =
     {
       if (element == null)
         indexOfNull(values)
       else
-        indexOfNotNull(values, element, comparer)
+        indexOfNotNull(values, element, ComparatorUtils.toComparator(comparison))
     }
 
   /**
@@ -1491,12 +1516,12 @@ object Linq {
    *
    * @throws NullPointerException When the values argument is null.
    */
-  def indexOf[T](values: java.lang.Iterable[T], element: T, comparer: Comparator[T]): Int =
+  def indexOf[T](values: java.lang.Iterable[T], element: T, comparison: ((T, T) => Int)): Int =
     {
       if (element == null)
         indexOfNull(values)
       else
-        indexOfNotNull(values, element, comparer)
+        indexOfNotNull(values, element, ComparatorUtils.toComparator(comparison))
     }
 
   /**
@@ -1534,7 +1559,7 @@ object Linq {
    *
    * @throws NullPointerException When the first or second argument is null.
    */
-  def intersect[T](first: Traversable[T], second: Traversable[T], comparer: Comparator[T]): Traversable[T] =
+  def intersect[T](first: Traversable[T], second: Traversable[T], comparison: ((T, T) => Int)): Traversable[T] =
     {
       if (first == null) throw new NullPointerException("first")
       if (second == null) throw new NullPointerException("second")
@@ -1542,13 +1567,8 @@ object Linq {
       var distinctFirst: Traversable[T] = null
       var distinctSecond: Traversable[T] = null
 
-      if (comparer == null) {
-        distinctFirst = distinct(first)
-        distinctSecond = distinct(second)
-      } else {
-        distinctFirst = distinct(first, comparer)
-        distinctSecond = distinct(second, comparer)
-      }
+      distinctFirst = distinct(first, comparison)
+      distinctSecond = distinct(second, comparison)
 
       val result = new ArrayBuffer[T](DEFAULT_LIST_SIZE)
       for (item <- distinctFirst)
@@ -1563,7 +1583,7 @@ object Linq {
    *
    * @throws NullPointerException When the first or second argument is null.
    */
-  def intersect[T](first: Array[T], second: Array[T], comparer: Comparator[T])(implicit manifest: ClassManifest[T]): Array[T] =
+  def intersect[T](first: Array[T], second: Array[T], comparison: ((T, T) => Int))(implicit manifest: ClassManifest[T]): Array[T] =
     {
       if (first == null) throw new NullPointerException("first")
       if (second == null) throw new NullPointerException("second")
@@ -1571,13 +1591,8 @@ object Linq {
       var distinctFirst: Array[T] = null
       var distinctSecond: Array[T] = null
 
-      if (comparer == null) {
-        distinctFirst = distinct(first)
-        distinctSecond = distinct(second)
-      } else {
-        distinctFirst = distinct(first, comparer)
-        distinctSecond = distinct(second, comparer)
-      }
+      distinctFirst = distinct(first, comparison)
+      distinctSecond = distinct(second, comparison)
 
       val result = new ArrayBuffer[T](DEFAULT_LIST_SIZE)
       for (item <- distinctFirst)
@@ -1592,7 +1607,7 @@ object Linq {
    *
    * @throws NullPointerException When the first or second argument is null.
    */
-  def intersect[T](first: java.lang.Iterable[T], second: java.lang.Iterable[T], comparer: Comparator[T]): java.lang.Iterable[T] =
+  def intersect[T](first: java.lang.Iterable[T], second: java.lang.Iterable[T], comparison: ((T, T) => Int)): java.lang.Iterable[T] =
     {
       if (first == null) throw new NullPointerException("first")
       if (second == null) throw new NullPointerException("second")
@@ -1600,13 +1615,8 @@ object Linq {
       var distinctFirst: java.lang.Iterable[T] = null
       var distinctSecond: java.lang.Iterable[T] = null
 
-      if (comparer == null) {
-        distinctFirst = distinct(first)
-        distinctSecond = distinct(second)
-      } else {
-        distinctFirst = distinct(first, comparer)
-        distinctSecond = distinct(second, comparer)
-      }
+      distinctFirst = distinct(first, comparison)
+      distinctSecond = distinct(second, comparison)
 
       val result = new ArrayList[T](DEFAULT_LIST_SIZE)
       val it = distinctFirst.iterator
@@ -1963,12 +1973,12 @@ object Linq {
    *
    * @throws NullPointerException If the values argument is null.
    */
-  def lastIndexOf[T](values: Traversable[T], element: T, comparer: Comparator[T]): Int =
+  def lastIndexOf[T](values: Traversable[T], element: T, comparison: ((T, T) => Int)): Int =
     {
       if (element == null)
         lastIndexOfNull(values)
       else
-        lastIndexOfNotNull(values, element, comparer)
+        lastIndexOfNotNull(values, element, ComparatorUtils.toComparator(comparison))
     }
 
   /**
@@ -1976,12 +1986,12 @@ object Linq {
    *
    * @throws NullPointerException If the values argument is null.
    */
-  def lastIndexOf[T](values: Array[T], element: T, comparer: Comparator[T]): Int =
+  def lastIndexOf[T](values: Array[T], element: T, comparison: ((T, T) => Int)): Int =
     {
       if (element == null)
         lastIndexOfNull(values)
       else
-        lastIndexOfNotNull(values, element, comparer)
+        lastIndexOfNotNull(values, element, ComparatorUtils.toComparator(comparison))
     }
 
   /**
@@ -1989,12 +1999,12 @@ object Linq {
    *
    * @throws NullPointerException If the values argument is null.
    */
-  def lastIndexOf[T](values: java.lang.Iterable[T], element: T, comparer: Comparator[T]): Int =
+  def lastIndexOf[T](values: java.lang.Iterable[T], element: T, comparison: ((T, T) => Int)): Int =
     {
       if (element == null)
         lastIndexOfNull(values)
       else
-        lastIndexOfNotNull(values, element, comparer)
+        lastIndexOfNotNull(values, element, ComparatorUtils.toComparator(comparison))
     }
 
   /**
@@ -2127,11 +2137,16 @@ object Linq {
    *
    * @throws NullPointerException An argument is null
    */
-  def maxOccurring[T](items: Traversable[T], comparator: Comparator[T]): T =
+  def maxOccurring[T](items: Traversable[T], comparison: ((T, T) => Int)): T =
     {
       if (items == null) throw new NullPointerException("items")
+      var lookup: TreeMap[T, ModuloCounter] = null
 
-      val lookup = new TreeMap[T, ModuloCounter](comparator)
+      if (comparison == null)
+        lookup = new TreeMap[T, ModuloCounter]()
+      else
+        lookup = new TreeMap[T, ModuloCounter](ComparatorUtils.toComparator(comparison))
+
       for (item <- items)
         if (!lookup.containsKey(item))
           lookup.put(item, new ModuloCounter(Long.MaxValue - 1))
@@ -2164,11 +2179,16 @@ object Linq {
    *
    * @throws NullPointerException An argument is null
    */
-  def maxOccurring[T](items: Array[T], comparator: Comparator[T]): T =
+  def maxOccurring[T](items: Array[T], comparison: ((T, T) => Int)): T =
     {
       if (items == null) throw new NullPointerException("items")
+      var lookup: TreeMap[T, ModuloCounter] = null
 
-      val lookup = new TreeMap[T, ModuloCounter](comparator)
+      if (comparison == null)
+        lookup = new TreeMap[T, ModuloCounter]()
+      else
+        lookup = new TreeMap[T, ModuloCounter](ComparatorUtils.toComparator(comparison))
+
       for (item <- items)
         if (!lookup.containsKey(item))
           lookup.put(item, new ModuloCounter(Long.MaxValue - 1))
@@ -2201,9 +2221,12 @@ object Linq {
    *
    * @throws NullPointerException An argument is null
    */
-  def maxOccurring[T](items: java.lang.Iterable[T], comparator: Comparator[T]): T =
+  def maxOccurring[T](items: java.lang.Iterable[T], comparison: ((T, T) => Int)): T =
     {
-      propel.core.utils.Linq.maxOccurring(items, comparator)
+      if (comparison == null)
+        propel.core.utils.Linq.maxOccurring(items)
+      else
+        propel.core.utils.Linq.maxOccurring(items, ComparatorUtils.toComparator(comparison))
     }
 
   /**
@@ -2245,14 +2268,20 @@ object Linq {
    *
    * @throws NullPointerException An argument is null
    */
-  def minOccurring[T](items: Traversable[T], comparator: Comparator[T]): T =
+  def minOccurring[T](items: Traversable[T], comparison: ((T, T) => Int)): T =
     {
       if (items == null) throw new NullPointerException("items")
 
       if (items.size <= 0)
         null.asInstanceOf[T]
       else {
-        val lookup = new TreeMap[T, ModuloCounter](comparator)
+        var lookup: TreeMap[T, ModuloCounter] = null
+
+        if (comparison == null)
+          lookup = new TreeMap[T, ModuloCounter]()
+        else
+          lookup = new TreeMap[T, ModuloCounter](ComparatorUtils.toComparator(comparison))
+
         for (item <- items)
           if (!lookup.containsKey(item))
             lookup.put(item, new ModuloCounter(Long.MaxValue - 1))
@@ -2282,14 +2311,20 @@ object Linq {
    *
    * @throws NullPointerException An argument is null
    */
-  def minOccurring[T](items: Array[T], comparator: Comparator[T]): T =
+  def minOccurring[T](items: Array[T], comparison: ((T, T) => Int)): T =
     {
       if (items == null) throw new NullPointerException("items")
 
       if (items.length <= 0)
         null.asInstanceOf[T]
       else {
-        val lookup = new TreeMap[T, ModuloCounter](comparator)
+        var lookup: TreeMap[T, ModuloCounter] = null
+
+        if (comparison == null)
+          lookup = new TreeMap[T, ModuloCounter]()
+        else
+          lookup = new TreeMap[T, ModuloCounter](ComparatorUtils.toComparator(comparison))
+
         for (item <- items)
           if (!lookup.containsKey(item))
             lookup.put(item, new ModuloCounter(Long.MaxValue - 1))
@@ -2319,9 +2354,12 @@ object Linq {
    *
    * @throws NullPointerException An argument is null
    */
-  def minOccurring[T](items: java.lang.Iterable[T], comparator: Comparator[T]): T =
+  def minOccurring[T](items: java.lang.Iterable[T], comparison: ((T, T) => Int)): T =
     {
-      propel.core.utils.Linq.minOccurring(items, comparator)
+      if (comparison == null)
+        propel.core.utils.Linq.minOccurring(items)
+      else
+        propel.core.utils.Linq.minOccurring(items, ComparatorUtils.toComparator(comparison))
     }
 
   /**
@@ -2554,16 +2592,16 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null.
    */
-  def orderBy[TKey, TResult](values: Traversable[TResult], keySelector: (TResult => TKey), comparer: Comparator[TKey]): Traversable[TResult] =
+  def orderBy[TKey, TResult](values: Traversable[TResult], keySelector: (TResult => TKey), comparison: ((TKey, TKey) => Int)): Traversable[TResult] =
     {
       if (values == null) throw new NullPointerException("values")
       if (keySelector == null) throw new NullPointerException("keySelector")
 
       var dict: TreeMap[TKey, ArrayBuffer[TResult]] = null
-      if (comparer == null)
+      if (comparison == null)
         dict = new TreeMap[TKey, ArrayBuffer[TResult]]()
       else
-        dict = new TreeMap[TKey, ArrayBuffer[TResult]](comparer)
+        dict = new TreeMap[TKey, ArrayBuffer[TResult]](ComparatorUtils.toComparator(comparison))
 
       for (item <- values) {
         val key = keySelector(item)
@@ -2591,16 +2629,16 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null.
    */
-  def orderBy[TKey, TResult](values: Array[TResult], keySelector: (TResult => TKey), comparer: Comparator[TKey])(implicit manifest: ClassManifest[TResult]): Array[TResult] =
+  def orderBy[TKey, TResult](values: Array[TResult], keySelector: (TResult => TKey), comparison: ((TKey, TKey) => Int))(implicit manifest: ClassManifest[TResult]): Array[TResult] =
     {
       if (values == null) throw new NullPointerException("values")
       if (keySelector == null) throw new NullPointerException("keySelector")
 
       var dict: TreeMap[TKey, ArrayBuffer[TResult]] = null
-      if (comparer == null)
+      if (comparison == null)
         dict = new TreeMap[TKey, ArrayBuffer[TResult]]()
       else
-        dict = new TreeMap[TKey, ArrayBuffer[TResult]](comparer)
+        dict = new TreeMap[TKey, ArrayBuffer[TResult]](ComparatorUtils.toComparator(comparison))
 
       for (item <- values) {
         val key = keySelector(item)
@@ -2628,16 +2666,16 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null.
    */
-  def orderBy[TKey, TResult](values: java.lang.Iterable[TResult], keySelector: (TResult => TKey), comparer: Comparator[TKey]): java.lang.Iterable[TResult] =
+  def orderBy[TKey, TResult](values: java.lang.Iterable[TResult], keySelector: (TResult => TKey), comparison: ((TKey, TKey) => Int)): java.lang.Iterable[TResult] =
     {
       if (values == null) throw new NullPointerException("values")
       if (keySelector == null) throw new NullPointerException("keySelector")
 
       var dict: TreeMap[TKey, ArrayList[TResult]] = null
-      if (comparer == null)
+      if (comparison == null)
         dict = new TreeMap[TKey, ArrayList[TResult]]()
       else
-        dict = new TreeMap[TKey, ArrayList[TResult]](comparer)
+        dict = new TreeMap[TKey, ArrayList[TResult]](ComparatorUtils.toComparator(comparison))
 
       val valueIt = values.iterator
       while (valueIt.hasNext) {
@@ -2701,14 +2739,14 @@ object Linq {
    * @throws NullPointerException When an argument is null.
    */
   def orderByThenBy[TKey, TKey2, TResult](values: Traversable[TResult],
-    keySelector: (TResult => TKey), comparer: Comparator[TKey],
-    keySelector2: (TResult => TKey2), comparer2: Comparator[TKey2]): Traversable[TResult] =
+    keySelector: (TResult => TKey), comparison: ((TKey, TKey) => Int),
+    keySelector2: (TResult => TKey2), comparison2: ((TKey2, TKey2) => Int)): Traversable[TResult] =
     {
       var dict: TreeMap[TKey, TreeMap[TKey2, ArrayBuffer[TResult]]] = null
-      if (comparer == null)
+      if (comparison == null)
         dict = new TreeMap[TKey, TreeMap[TKey2, ArrayBuffer[TResult]]]()
       else
-        dict = new TreeMap[TKey, TreeMap[TKey2, ArrayBuffer[TResult]]](comparer)
+        dict = new TreeMap[TKey, TreeMap[TKey2, ArrayBuffer[TResult]]](ComparatorUtils.toComparator(comparison))
 
       for (item <- values) {
         val key = keySelector.apply(item)
@@ -2725,10 +2763,10 @@ object Linq {
         } else {
           var secondDictionary: TreeMap[TKey2, ArrayBuffer[TResult]] = null
 
-          if (comparer2 == null)
+          if (comparison2 == null)
             secondDictionary = new TreeMap[TKey2, ArrayBuffer[TResult]]()
           else
-            secondDictionary = new TreeMap[TKey2, ArrayBuffer[TResult]](comparer2)
+            secondDictionary = new TreeMap[TKey2, ArrayBuffer[TResult]](ComparatorUtils.toComparator(comparison2))
 
           val lst = new ArrayBuffer[TResult]()
           lst += item
@@ -2759,14 +2797,14 @@ object Linq {
    * @throws NullPointerException When an argument is null.
    */
   def orderByThenBy[TKey, TKey2, TResult](values: Array[TResult],
-    keySelector: (TResult => TKey), comparer: Comparator[TKey],
-    keySelector2: (TResult => TKey2), comparer2: Comparator[TKey2])(implicit manifest: ClassManifest[TResult]): Array[TResult] =
+    keySelector: (TResult => TKey), comparison: ((TKey, TKey) => Int),
+    keySelector2: (TResult => TKey2), comparison2: ((TKey2, TKey2) => Int))(implicit manifest: ClassManifest[TResult]): Array[TResult] =
     {
       var dict: TreeMap[TKey, TreeMap[TKey2, ArrayBuffer[TResult]]] = null
-      if (comparer == null)
+      if (comparison == null)
         dict = new TreeMap[TKey, TreeMap[TKey2, ArrayBuffer[TResult]]]()
       else
-        dict = new TreeMap[TKey, TreeMap[TKey2, ArrayBuffer[TResult]]](comparer)
+        dict = new TreeMap[TKey, TreeMap[TKey2, ArrayBuffer[TResult]]](ComparatorUtils.toComparator(comparison))
 
       for (item <- values) {
         val key = keySelector.apply(item)
@@ -2783,10 +2821,10 @@ object Linq {
         } else {
           var secondDictionary: TreeMap[TKey2, ArrayBuffer[TResult]] = null
 
-          if (comparer2 == null)
+          if (comparison2 == null)
             secondDictionary = new TreeMap[TKey2, ArrayBuffer[TResult]]()
           else
-            secondDictionary = new TreeMap[TKey2, ArrayBuffer[TResult]](comparer2)
+            secondDictionary = new TreeMap[TKey2, ArrayBuffer[TResult]](ComparatorUtils.toComparator(comparison2))
 
           val lst = new ArrayBuffer[TResult]()
           lst += item
@@ -2817,14 +2855,14 @@ object Linq {
    * @throws NullPointerException When an argument is null.
    */
   def orderByThenBy[TKey, TKey2, TResult](values: java.lang.Iterable[TResult],
-    keySelector: (TResult => TKey), comparer: Comparator[TKey],
-    keySelector2: (TResult => TKey2), comparer2: Comparator[TKey2]): java.lang.Iterable[TResult] =
+    keySelector: (TResult => TKey), comparison: ((TKey, TKey) => Int),
+    keySelector2: (TResult => TKey2), comparison2: ((TKey2, TKey2) => Int)): java.lang.Iterable[TResult] =
     {
       var dict: TreeMap[TKey, TreeMap[TKey2, ArrayList[TResult]]] = null
-      if (comparer == null)
+      if (comparison == null)
         dict = new TreeMap[TKey, TreeMap[TKey2, ArrayList[TResult]]]()
       else
-        dict = new TreeMap[TKey, TreeMap[TKey2, ArrayList[TResult]]](comparer)
+        dict = new TreeMap[TKey, TreeMap[TKey2, ArrayList[TResult]]](ComparatorUtils.toComparator(comparison))
 
       val valuesIt = values.iterator
       while (valuesIt.hasNext) {
@@ -2843,10 +2881,10 @@ object Linq {
         } else {
           var secondDictionary: TreeMap[TKey2, ArrayList[TResult]] = null
 
-          if (comparer2 == null)
+          if (comparison2 == null)
             secondDictionary = new TreeMap[TKey2, ArrayList[TResult]]()
           else
-            secondDictionary = new TreeMap[TKey2, ArrayList[TResult]](comparer2)
+            secondDictionary = new TreeMap[TKey2, ArrayList[TResult]](ComparatorUtils.toComparator(comparison2))
 
           val lst = new ArrayList[TResult]()
           lst.add(item)
@@ -3572,19 +3610,6 @@ object Linq {
     }
 
   /**
-   * Sorts a Traversable
-   *
-   * @throws NullPointerException When an argument is null
-   */
-  def sort[T](values: Traversable[T], comparison: ((T, T) => Boolean)): Traversable[T] =
-    {
-      if (values == null) throw new NullPointerException("values")
-      if (comparison == null) throw new NullPointerException("comparison")
-      val buf = toBuffer(values)
-      buf.sortWith(comparison)
-    }
-
-  /**
    * Sorts an array
    *
    * @throws NullPointerException When an argument is null
@@ -3714,19 +3739,19 @@ object Linq {
   /**
    * Splits a sequence into parts delimited by the specified delimited. Empty entries between delimiters are removed.
    *
-   * @throws NullPointerException When an argument is null, or an item in the iterable is null and the comparer does not handle this case.
+   * @throws NullPointerException When an argument is null, or an item in the iterable is null and the comparator does not handle this case.
    */
-  def split[T](values: Traversable[T], delimiter: T, comparer: Comparator[T]): Array[Buffer[T]] =
+  def split[T](values: Traversable[T], delimiter: T, comparison: ((T, T) => Int)): Array[Buffer[T]] =
     {
       if (values == null) throw new NullPointerException("values")
       if (delimiter == null) throw new NullPointerException("delimiter")
-      if (comparer == null) throw new NullPointerException("comparer")
+      if (comparison == null) throw new NullPointerException("comparison")
 
       val parts = new ArrayBuffer[Buffer[T]](DEFAULT_LIST_SIZE)
       parts += new ArrayBuffer[T](DEFAULT_LIST_SIZE)
 
       for (item <- values) {
-        if (comparer.compare(item, delimiter) != 0)
+        if (comparison(item, delimiter) != 0)
           // not a delimiter, add to parts
           parts(parts.size - 1) += item
         else
@@ -3740,19 +3765,19 @@ object Linq {
   /**
    * Splits a sequence into parts delimited by the specified delimited. Empty entries between delimiters are removed.
    *
-   * @throws NullPointerException When an argument is null, or an item in the iterable is null and the comparer does not handle this case.
+   * @throws NullPointerException When an argument is null, or an item in the iterable is null and the comparator does not handle this case.
    */
-  def split[T](values: Array[T], delimiter: T, comparer: Comparator[T]): Array[Buffer[T]] =
+  def split[T](values: Array[T], delimiter: T, comparison: ((T, T) => Int)): Array[Buffer[T]] =
     {
       if (values == null) throw new NullPointerException("values")
       if (delimiter == null) throw new NullPointerException("delimiter")
-      if (comparer == null) throw new NullPointerException("comparer")
+      if (comparison == null) throw new NullPointerException("comparison")
 
       val parts = new ArrayBuffer[Buffer[T]](DEFAULT_LIST_SIZE)
       parts += new ArrayBuffer[T](DEFAULT_LIST_SIZE)
 
       for (item <- values) {
-        if (comparer.compare(item, delimiter) != 0)
+        if (comparison(item, delimiter) != 0)
           // not a delimiter, add to parts
           parts(parts.size - 1) += item
         else
@@ -3768,11 +3793,11 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null, or an item in the iterable is null.
    */
-  def split[T](values: java.lang.Iterable[T], delimiter: T, comparer: Comparator[T])(implicit manifest: ClassManifest[T]): Array[java.util.List[T]] =
+  def split[T](values: java.lang.Iterable[T], delimiter: T, comparison: ((T, T) => Int))(implicit manifest: ClassManifest[T]): Array[java.util.List[T]] =
     {
       if (values == null) throw new NullPointerException("values")
       if (delimiter == null) throw new NullPointerException("delimiter")
-      if (comparer == null) throw new NullPointerException("comparer")
+      if (comparison == null) throw new NullPointerException("comparison")
 
       val parts = new ArrayList[java.util.List[T]](DEFAULT_LIST_SIZE)
       parts.add(new ArrayList[T](DEFAULT_LIST_SIZE))
@@ -3780,7 +3805,7 @@ object Linq {
       val it = values.iterator
       while (it.hasNext) {
         val item = it.next
-        if (comparer.compare(item, delimiter) != 0)
+        if (comparison(item, delimiter) != 0)
           // not a delimiter, add to parts
           parts.get(parts.size - 1).add(item)
         else
@@ -4292,20 +4317,14 @@ object Linq {
    *
    * @throws NullPointerException When the first or second argument is null.
    */
-  def union[T](first: Traversable[T], second: Traversable[T], comparer: Comparator[T]): Traversable[T] =
+  def union[T](first: Traversable[T], second: Traversable[T], comparison: ((T, T) => Int)): Traversable[T] =
     {
       var firstDistinct: Traversable[T] = null
       var secondDistinct: Traversable[T] = null
 
-      if (comparer == null) {
-        firstDistinct = distinct(first)
-        secondDistinct = distinct(second)
-        concat(firstDistinct, secondDistinct)
-      } else {
-        firstDistinct = distinct(first, comparer)
-        secondDistinct = distinct(second, comparer)
-        concat(firstDistinct, secondDistinct)
-      }
+      firstDistinct = distinct(first, comparison)
+      secondDistinct = distinct(second, comparison)
+      concat(firstDistinct, secondDistinct)
     }
 
   /**
@@ -4313,22 +4332,14 @@ object Linq {
    *
    * @throws NullPointerException When the first or second argument is null.
    */
-  def union[T](first: Array[T], second: Array[T], comparer: Comparator[T])(implicit manifest: ClassManifest[T]): Array[T] =
+  def union[T](first: Array[T], second: Array[T], comparison: ((T, T) => Int))(implicit manifest: ClassManifest[T]): Array[T] =
     {
       var firstDistinct: Array[T] = null
       var secondDistinct: Array[T] = null
 
-      if (comparer == null) {
-        firstDistinct = distinct(first)
-        secondDistinct = distinct(second)
-        val union = concat(firstDistinct, secondDistinct)
-        distinct(union)
-      } else {
-        firstDistinct = distinct(first, comparer)
-        secondDistinct = distinct(second, comparer)
-        val union = concat(firstDistinct, secondDistinct)
-        distinct(union, comparer)
-      }
+      firstDistinct = distinct(first, comparison)
+      secondDistinct = distinct(second, comparison)
+      concat(firstDistinct, secondDistinct)
     }
 
   /**
@@ -4336,9 +4347,12 @@ object Linq {
    *
    * @throws NullPointerException When the first or second argument is null.
    */
-  def union[T](first: java.lang.Iterable[T], second: java.lang.Iterable[T], comparer: Comparator[T]): java.lang.Iterable[T] =
+  def union[T](first: java.lang.Iterable[T], second: java.lang.Iterable[T], comparison: ((T, T) => Int)): java.lang.Iterable[T] =
     {
-      propel.core.utils.Linq.union(first, second, comparer)
+      if (comparison == null)
+        propel.core.utils.Linq.union(first, second)
+      else
+        propel.core.utils.Linq.union(first, second, ComparatorUtils.toComparator(comparison))
     }
 
   /**
@@ -4678,12 +4692,16 @@ object Linq {
   /**
    * Returns true if a non-null item is contained in the sequence of values
    */
-  private def containsNonNull[T](values: Traversable[T], item: T, comparer: Comparator[T]): Boolean =
+  private def containsNonNull[T](values: Traversable[T], item: T, comparator: Comparator[T]): Boolean =
     {
+      if (values == null) throw new NullPointerException("values")
+      if (item == null) throw new NullPointerException("item")
+      if (comparator == null) throw new NullPointerException("comparator")
+
       for (x <- values)
         // if a value is null, we cannot use equals
         if (x != null)
-          if (comparer.compare(x, item) == 0)
+          if (comparator.compare(x, item) == 0)
             return true
 
       return false
@@ -4692,14 +4710,18 @@ object Linq {
   /**
    * Returns true if a non-null item is contained in the sequence of values
    */
-  private def containsNonNull[T](values: Array[T], item: T, comparer: Comparator[T]): Boolean =
+  private def containsNonNull[T](values: Array[T], item: T, comparator: Comparator[T]): Boolean =
     {
+      if (values == null) throw new NullPointerException("values")
+      if (item == null) throw new NullPointerException("item")
+      if (comparator == null) throw new NullPointerException("comparator")
+
       val count = values.length
       for (i <- 0 to count) {
         val x = values(i)
         // if a value is null, we cannot use equals
         if (x != null)
-          if (comparer.compare(x, item) == 0)
+          if (comparator.compare(x, item) == 0)
             return true
       }
 
@@ -4809,11 +4831,11 @@ object Linq {
   /**
    * Returns the number of occurences of a non-null value in the collection
    */
-  private def countNonNull[T](values: Traversable[T], value: T, comparer: Comparator[T]): Int =
+  private def countNonNull[T](values: Traversable[T], value: T, comparator: Comparator[T]): Int =
     {
       if (values == null) throw new NullPointerException("values")
       if (value == null) throw new NullPointerException("value")
-      if (comparer == null) throw new NullPointerException("comparer")
+      if (comparator == null) throw new NullPointerException("comparator")
 
       // check if value contained collection
       var result = 0
@@ -4821,7 +4843,7 @@ object Linq {
       // the values is confirmed to be a non-null IEnumerable prior to this
       for (v <- values)
         if (v != null)
-          if (comparer.compare(v, value) == 0)
+          if (comparator.compare(v, value) == 0)
             result = result + 1
 
       result
@@ -4830,11 +4852,11 @@ object Linq {
   /**
    * Returns the number of occurences of a non-null value in the collection
    */
-  private def countNonNull[T](values: Array[T], value: T, comparer: Comparator[T]): Int =
+  private def countNonNull[T](values: Array[T], value: T, comparator: Comparator[T]): Int =
     {
       if (values == null) throw new NullPointerException("values")
       if (value == null) throw new NullPointerException("value")
-      if (comparer == null) throw new NullPointerException("comparer")
+      if (comparator == null) throw new NullPointerException("comparator")
 
       // check if value contained collection
       var result = 0
@@ -4844,7 +4866,7 @@ object Linq {
       for (i <- 0 to count) {
         val v = values(i)
         if (v != null)
-          if (comparer.compare(v, value) == 0)
+          if (comparator.compare(v, value) == 0)
             result = result + 1
       }
 
@@ -4969,15 +4991,15 @@ object Linq {
   /**
    * Returns the index where the specified not-null element is first found. If the element is not found, this returns -1.
    */
-  private def indexOfNotNull[T](values: Traversable[T], element: T, comparer: Comparator[T]): Int =
+  private def indexOfNotNull[T](values: Traversable[T], element: T, comparator: Comparator[T]): Int =
     {
       if (values == null) throw new NullPointerException("values")
       if (element == null) throw new NullPointerException("element")
-      if (comparer == null) throw new NullPointerException("comparer")
+      if (comparator == null) throw new NullPointerException("comparator")
 
       var i = 0
       for (item <- values) {
-        if (comparer.compare(element, item) == 0)
+        if (comparator.compare(element, item) == 0)
           return i
 
         i = i + 1
@@ -4989,15 +5011,15 @@ object Linq {
   /**
    * Returns the index where the specified not-null element is first found. If the element is not found, this returns -1.
    */
-  private def indexOfNotNull[T](values: Array[T], element: T, comparer: Comparator[T]): Int =
+  private def indexOfNotNull[T](values: Array[T], element: T, comparator: Comparator[T]): Int =
     {
       if (values == null) throw new NullPointerException("values")
       if (element == null) throw new NullPointerException("element")
-      if (comparer == null) throw new NullPointerException("comparer")
+      if (comparator == null) throw new NullPointerException("comparator")
 
       var i = 0
       for (item <- values) {
-        if (comparer.compare(element, item) == 0)
+        if (comparator.compare(element, item) == 0)
           return i
 
         i = i + 1
@@ -5009,17 +5031,17 @@ object Linq {
   /**
    * Returns the index where the specified not-null element is first found. If the element is not found, this returns -1.
    */
-  private def indexOfNotNull[T](values: java.lang.Iterable[T], element: T, comparer: Comparator[T]): Int =
+  private def indexOfNotNull[T](values: java.lang.Iterable[T], element: T, comparator: Comparator[T]): Int =
     {
       if (values == null) throw new NullPointerException("values")
       if (element == null) throw new NullPointerException("element")
-      if (comparer == null) throw new NullPointerException("comparer")
+      if (comparator == null) throw new NullPointerException("comparator")
 
       var i = 0
       val it = values.iterator
       while (it.hasNext) {
         val item = it.next
-        if (comparer.compare(element, item) == 0)
+        if (comparator.compare(element, item) == 0)
           return i
 
         i = i + 1
@@ -5148,16 +5170,16 @@ object Linq {
   /**
    * Returns the last index where the specified not-null element is first found. If the element is not found, this returns -1.
    */
-  private def lastIndexOfNotNull[T](values: Traversable[T], element: T, comparer: Comparator[T]): Int =
+  private def lastIndexOfNotNull[T](values: Traversable[T], element: T, comparator: Comparator[T]): Int =
     {
       if (values == null) throw new NullPointerException("values")
       if (element == null) throw new NullPointerException("element")
-      if (comparer == null) throw new NullPointerException("comparer")
+      if (comparator == null) throw new NullPointerException("comparator")
 
       var lastPos = -1
       var i = 0
       for (item <- values) {
-        if (comparer.compare(element, item) == 0)
+        if (comparator.compare(element, item) == 0)
           lastPos = i
 
         i = i + 1
@@ -5169,16 +5191,16 @@ object Linq {
   /**
    * Returns the last index where the specified not-null element is first found. If the element is not found, this returns -1.
    */
-  private def lastIndexOfNotNull[T](values: Array[T], element: T, comparer: Comparator[T]): Int =
+  private def lastIndexOfNotNull[T](values: Array[T], element: T, comparator: Comparator[T]): Int =
     {
       if (values == null) throw new NullPointerException("values")
       if (element == null) throw new NullPointerException("element")
-      if (comparer == null) throw new NullPointerException("comparer")
+      if (comparator == null) throw new NullPointerException("comparator")
 
       var lastPos = -1
       var i = 0
       for (item <- values) {
-        if (comparer.compare(element, item) == 0)
+        if (comparator.compare(element, item) == 0)
           lastPos = i
 
         i = i + 1
@@ -5190,18 +5212,18 @@ object Linq {
   /**
    * Returns the last index where the specified not-null element is first found. If the element is not found, this returns -1.
    */
-  private def lastIndexOfNotNull[T](values: java.lang.Iterable[T], element: T, comparer: Comparator[T]): Int =
+  private def lastIndexOfNotNull[T](values: java.lang.Iterable[T], element: T, comparator: Comparator[T]): Int =
     {
       if (values == null) throw new NullPointerException("values")
       if (element == null) throw new NullPointerException("element")
-      if (comparer == null) throw new NullPointerException("comparer")
+      if (comparator == null) throw new NullPointerException("comparator")
 
       var lastPos = -1
       var i = 0
       val it = values.iterator
       while (it.hasNext) {
         val item = it.next
-        if (comparer.compare(element, item) == 0)
+        if (comparator.compare(element, item) == 0)
           lastPos = i
 
         i = i + 1

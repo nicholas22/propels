@@ -557,11 +557,17 @@ object ArrayUtils {
    *
    * @throws NullPointerException The array is null.
    */
-  def toSortedList[T <: Comparable[T]](array: Array[T], comparer: Comparator[T]): SortedList[T] =
+  def toSortedList[T <: Comparable[T]](array: Array[T], comparison: ((T, T) => Int)): SortedList[T] =
     {
       if (array == null) throw new NullPointerException("array")
 
-      val result = new SortedList[T](comparer, array.getClass().getComponentType())
+      var result: SortedList[T] = null
+
+      if (comparison == null)
+        result = new SortedList[T](array.getClass().getComponentType())
+      else
+        result = new SortedList[T](ComparatorUtils.toComparator(comparison), array.getClass().getComponentType())
+
       for (element <- array)
         result.add(element)
 
