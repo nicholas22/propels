@@ -129,6 +129,8 @@ There are plans to port certain things over to Scala (especially if they are usi
 
 ## Changelog
 
+#### 1.0.1: update to jpropel v1.0.5
+
 #### 1.0: feature complete
 
 #### 0.5: Upgrade
