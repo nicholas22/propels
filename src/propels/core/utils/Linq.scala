@@ -39,6 +39,7 @@ import scala.util.control.Breaks.breakable
 import scala.util.control.Breaks.break
 import scala.collection.mutable.Buffer
 import scala.util.Sorting
+import scala.reflect.ClassTag
 
 object Linq {
 
@@ -343,7 +344,7 @@ object Linq {
    *
    * @throws NullPointerException When the values or one of its elements is null.
    */
-  def concat[T](values: Array[T]*)(implicit manifest: ClassManifest[T]): Array[T] =
+  def concat[T](values: Array[T]*)(implicit manifest: ClassTag[T]): Array[T] =
     {
       if (values == null) throw new NullPointerException("values")
       val result = new ArrayBuffer[T](DEFAULT_LIST_SIZE)
@@ -772,7 +773,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null.
    */
-  def defaultIfEmpty[T](values: Array[T])(implicit manifest: ClassManifest[T]): Array[T] =
+  def defaultIfEmpty[T](values: Array[T])(implicit manifest: ClassTag[T]): Array[T] =
     {
       if (values == null) throw new NullPointerException("values")
 
@@ -796,7 +797,7 @@ object Linq {
   /**
    * Returns the default value for a type
    */
-  def defaultValue[U: ClassManifest]: U =
+  def defaultValue[U: ClassTag]: U =
     {
       new Array[U](1)(0)
     }
@@ -816,7 +817,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null.
    */
-  def distinct[T](values: Array[T])(implicit manifest: ClassManifest[T]): Array[T] =
+  def distinct[T](values: Array[T])(implicit manifest: ClassTag[T]): Array[T] =
     {
       distinct(values, null)
     }
@@ -861,7 +862,7 @@ object Linq {
    *
    * @throws NullPointerException When the values argument is null.
    */
-  def distinct[T](values: Array[T], comparison: ((T, T) => Int))(implicit manifest: ClassManifest[T]): Array[T] =
+  def distinct[T](values: Array[T], comparison: ((T, T) => Int))(implicit manifest: ClassTag[T]): Array[T] =
     {
       if (values == null) throw new NullPointerException("values")
 
@@ -1004,7 +1005,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null.
    */
-  def except[T](values: Array[T], removedValues: Array[T])(implicit manifest: ClassManifest[T]): Array[T] =
+  def except[T](values: Array[T], removedValues: Array[T])(implicit manifest: ClassTag[T]): Array[T] =
     {
       except(values, removedValues, null)
     }
@@ -1048,7 +1049,7 @@ object Linq {
    *
    * @throws NullPointerException When the values or removedValues argument is null.
    */
-  def except[T](values: Array[T], removedValues: Array[T], comparison: ((T, T) => Int))(implicit manifest: ClassManifest[T]): Array[T] =
+  def except[T](values: Array[T], removedValues: Array[T], comparison: ((T, T) => Int))(implicit manifest: ClassTag[T]): Array[T] =
     {
       if (values == null) throw new NullPointerException("values")
       if (removedValues == null) throw new NullPointerException("removedValues")
@@ -1324,7 +1325,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null.
    */
-  def groupBy[TKey, TResult](values: Array[TResult], keySelector: (TResult => TKey))(implicit manifest: ClassManifest[TResult]): Array[TResult] =
+  def groupBy[TKey, TResult](values: Array[TResult], keySelector: (TResult => TKey))(implicit manifest: ClassTag[TResult]): Array[TResult] =
     {
       groupBy(values, keySelector, null)
     }
@@ -1379,7 +1380,7 @@ object Linq {
    *
    * @throws NullPointerException When the values argument or the key selector is null.
    */
-  def groupBy[TKey, TResult](values: Array[TResult], keySelector: (TResult => TKey), comparison: ((TKey, TKey) => Int))(implicit manifest: ClassManifest[TResult]): Array[TResult] =
+  def groupBy[TKey, TResult](values: Array[TResult], keySelector: (TResult => TKey), comparison: ((TKey, TKey) => Int))(implicit manifest: ClassTag[TResult]): Array[TResult] =
     {
       if (values == null) throw new NullPointerException("values")
       if (keySelector == null) throw new NullPointerException("keySelector")
@@ -1539,7 +1540,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null.
    */
-  def intersect[T](first: Array[T], second: Array[T])(implicit manifest: ClassManifest[T]): Array[T] =
+  def intersect[T](first: Array[T], second: Array[T])(implicit manifest: ClassTag[T]): Array[T] =
     {
       intersect(first, second, null)
     }
@@ -1583,7 +1584,7 @@ object Linq {
    *
    * @throws NullPointerException When the first or second argument is null.
    */
-  def intersect[T](first: Array[T], second: Array[T], comparison: ((T, T) => Int))(implicit manifest: ClassManifest[T]): Array[T] =
+  def intersect[T](first: Array[T], second: Array[T], comparison: ((T, T) => Int))(implicit manifest: ClassTag[T]): Array[T] =
     {
       if (first == null) throw new NullPointerException("first")
       if (second == null) throw new NullPointerException("second")
@@ -2014,7 +2015,18 @@ object Linq {
    */
   def max[T <: Comparable[T]](items: Array[T]): T =
     {
-      propel.core.utils.Linq.max(items)
+      if (items == null)
+        throw new NullPointerException("items")
+
+      if (items.length <= 0)
+        return null.asInstanceOf[T];
+
+      var max = items(0);
+      for (item <- items)
+        if (max.compareTo(item) < 0)
+          max = item;
+
+      return max;
     }
 
   /**
@@ -2052,8 +2064,19 @@ object Linq {
    *
    * @throws NullPointerException An argument is null
    */
-  def min[T <: Comparable[T]](items: Array[T]) {
-    propel.core.utils.Linq.min(items)
+  def min[T <: Comparable[T]](items: Array[T]): T = {
+    if (items == null)
+      throw new NullPointerException("items")
+
+    if (items.length <= 0)
+      return null.asInstanceOf[T];
+
+    var min = items(0)
+    for (item <- items)
+      if (min.compareTo(item) > 0)
+        min = item;
+
+    return min;
   }
 
   /**
@@ -2408,7 +2431,7 @@ object Linq {
    */
   def join[TOuter, TInner, TKey <: Comparable[TKey], TResult](outerValues: Array[TOuter], innerValues: Array[TInner],
     outerKeySelector: (TOuter => TKey), innerKeySelector: (TInner => TKey),
-    resultSelector: ((TOuter, TInner) => TResult))(implicit manifest: ClassManifest[TResult]): Array[TResult] =
+    resultSelector: ((TOuter, TInner) => TResult))(implicit manifest: ClassTag[TResult]): Array[TResult] =
     {
       if (outerValues == null) throw new NullPointerException("outerValues")
       if (innerValues == null) throw new NullPointerException("innerValues")
@@ -2511,7 +2534,7 @@ object Linq {
    *
    * @throws NullPointerException When the argument is null.
    */
-  def ofType[TSource, TDest](values: Array[TSource], destinationClass: Class[TDest])(implicit manifest: ClassManifest[TDest]): Array[TDest] =
+  def ofType[TSource, TDest](values: Array[TSource], destinationClass: Class[TDest])(implicit manifest: ClassTag[TDest]): Array[TDest] =
     {
       if (values == null) throw new NullPointerException("values")
       if (destinationClass == null) throw new NullPointerException("destinationClass")
@@ -2572,7 +2595,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null.
    */
-  def orderBy[TKey <: Comparable[TKey], TResult](values: Array[TResult], keySelector: (TResult => TKey))(implicit manifest: ClassManifest[TResult]): Array[TResult] =
+  def orderBy[TKey <: Comparable[TKey], TResult](values: Array[TResult], keySelector: (TResult => TKey))(implicit manifest: ClassTag[TResult]): Array[TResult] =
     {
       orderBy(values, keySelector, null)
     }
@@ -2629,7 +2652,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null.
    */
-  def orderBy[TKey, TResult](values: Array[TResult], keySelector: (TResult => TKey), comparison: ((TKey, TKey) => Int))(implicit manifest: ClassManifest[TResult]): Array[TResult] =
+  def orderBy[TKey, TResult](values: Array[TResult], keySelector: (TResult => TKey), comparison: ((TKey, TKey) => Int))(implicit manifest: ClassTag[TResult]): Array[TResult] =
     {
       if (values == null) throw new NullPointerException("values")
       if (keySelector == null) throw new NullPointerException("keySelector")
@@ -2717,7 +2740,7 @@ object Linq {
    * @throws NullPointerException When an argument is null.
    */
   def orderByThenBy[TKey <: Comparable[TKey], TKey2 <: Comparable[TKey2], TResult](values: Array[TResult],
-    keySelector: (TResult => TKey), keySelector2: (TResult => TKey2))(implicit manifest: ClassManifest[TResult]): Array[TResult] =
+    keySelector: (TResult => TKey), keySelector2: (TResult => TKey2))(implicit manifest: ClassTag[TResult]): Array[TResult] =
     {
       orderByThenBy(values, keySelector, null, keySelector2, null)
     }
@@ -2798,7 +2821,7 @@ object Linq {
    */
   def orderByThenBy[TKey, TKey2, TResult](values: Array[TResult],
     keySelector: (TResult => TKey), comparison: ((TKey, TKey) => Int),
-    keySelector2: (TResult => TKey2), comparison2: ((TKey2, TKey2) => Int))(implicit manifest: ClassManifest[TResult]): Array[TResult] =
+    keySelector2: (TResult => TKey2), comparison2: ((TKey2, TKey2) => Int))(implicit manifest: ClassTag[TResult]): Array[TResult] =
     {
       var dict: TreeMap[TKey, TreeMap[TKey2, ArrayBuffer[TResult]]] = null
       if (comparison == null)
@@ -2938,7 +2961,7 @@ object Linq {
    *
    * @throws NullPointerException The values argument is null.
    */
-  def partition[T](values: Array[T], predicate: (T => Boolean))(implicit manifest: ClassManifest[T]): Pair[Array[T], Array[T]] =
+  def partition[T](values: Array[T], predicate: (T => Boolean))(implicit manifest: ClassTag[T]): Pair[Array[T], Array[T]] =
     {
       if (values == null) throw new NullPointerException("values")
       if (predicate == null) throw new NullPointerException("predicate")
@@ -3019,7 +3042,7 @@ object Linq {
    * @throws NullPointerException The values argument is null.
    * @throws IndexOutOfBoundsException An index is out of range.
    */
-  def range[T](values: Array[T], start: Int, finish: Int)(implicit manifest: ClassManifest[T]): Array[T] =
+  def range[T](values: Array[T], start: Int, finish: Int)(implicit manifest: ClassTag[T]): Array[T] =
     {
       if (values == null) throw new NullPointerException("values")
       if (start < 0) throw new IndexOutOfBoundsException("start=" + start)
@@ -3187,7 +3210,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null.
    */
-  def select[TSource, TResult](values: Array[TSource], selector: (TSource => TResult))(implicit manifest: ClassManifest[TResult]): Array[TResult] =
+  def select[TSource, TResult](values: Array[TSource], selector: (TSource => TResult))(implicit manifest: ClassTag[TResult]): Array[TResult] =
     {
       if (values == null) throw new NullPointerException("values")
       if (selector == null) throw new NullPointerException("selector")
@@ -3241,7 +3264,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null.
    */
-  def selectMany[TSource, TResult](values: Array[TSource], selector: (TSource => Array[TResult]))(implicit manifest: ClassManifest[TResult]): Array[TResult] =
+  def selectMany[TSource, TResult](values: Array[TSource], selector: (TSource => Array[TResult]))(implicit manifest: ClassTag[TResult]): Array[TResult] =
     {
       if (values == null) throw new NullPointerException("values")
       if (selector == null) throw new NullPointerException("selector")
@@ -3484,7 +3507,7 @@ object Linq {
    * @throws NullPointerException When the values argument is null
    * @throws IllegalArgumentException When count is out of range.
    */
-  def skip[T](values: Array[T], count: Int)(implicit manifest: ClassManifest[T]): Array[T] =
+  def skip[T](values: Array[T], count: Int)(implicit manifest: ClassTag[T]): Array[T] =
     {
       if (values == null) throw new NullPointerException("values")
       if (count < 0) throw new IllegalArgumentException("count=" + count)
@@ -3550,7 +3573,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null
    */
-  def skipWhile[T](values: Array[T], predicate: (T => Boolean))(implicit manifest: ClassManifest[T]): Array[T] =
+  def skipWhile[T](values: Array[T], predicate: (T => Boolean))(implicit manifest: ClassTag[T]): Array[T] =
     {
       if (values == null) throw new NullPointerException("values")
 
@@ -3664,7 +3687,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null, or an item in the iterable is null.
    */
-  def split[T](values: Traversable[T], delimiter: T)(implicit manifest: ClassManifest[T]): Array[Buffer[T]] =
+  def split[T](values: Traversable[T], delimiter: T)(implicit manifest: ClassTag[T]): Array[Buffer[T]] =
     {
       if (values == null) throw new NullPointerException("values")
       if (delimiter == null) throw new NullPointerException("delimiter")
@@ -3689,7 +3712,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null, or an item in the iterable is null.
    */
-  def split[T](values: Array[T], delimiter: T)(implicit manifest: ClassManifest[T]): Array[Buffer[T]] =
+  def split[T](values: Array[T], delimiter: T)(implicit manifest: ClassTag[T]): Array[Buffer[T]] =
     {
       if (values == null) throw new NullPointerException("values")
       if (delimiter == null) throw new NullPointerException("delimiter")
@@ -3714,7 +3737,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null, or an item in the iterable is null.
    */
-  def split[T](values: java.lang.Iterable[T], delimiter: T)(implicit manifest: ClassManifest[T]): Array[java.util.List[T]] =
+  def split[T](values: java.lang.Iterable[T], delimiter: T)(implicit manifest: ClassTag[T]): Array[java.util.List[T]] =
     {
       if (values == null) throw new NullPointerException("values")
       if (delimiter == null) throw new NullPointerException("delimiter")
@@ -3793,7 +3816,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null, or an item in the iterable is null.
    */
-  def split[T](values: java.lang.Iterable[T], delimiter: T, comparison: ((T, T) => Int))(implicit manifest: ClassManifest[T]): Array[java.util.List[T]] =
+  def split[T](values: java.lang.Iterable[T], delimiter: T, comparison: ((T, T) => Int))(implicit manifest: ClassTag[T]): Array[java.util.List[T]] =
     {
       if (values == null) throw new NullPointerException("values")
       if (delimiter == null) throw new NullPointerException("delimiter")
@@ -3890,7 +3913,7 @@ object Linq {
    * @throws NullPointerException The values argument is null.
    * @throws IllegalArgumentException The count argument is out of range.
    */
-  def take[T](values: Array[T], count: Int)(implicit manifest: ClassManifest[T]): Array[T] =
+  def take[T](values: Array[T], count: Int)(implicit manifest: ClassTag[T]): Array[T] =
     {
       val result = new ArrayBuffer[T](count)
       var i = 0
@@ -3945,7 +3968,7 @@ object Linq {
    *
    * @throws NullPointerException An argument is null.
    */
-  def takeWhile[T](values: Array[T], predicate: (T => Boolean))(implicit manifest: ClassManifest[T]): Array[T] =
+  def takeWhile[T](values: Array[T], predicate: (T => Boolean))(implicit manifest: ClassTag[T]): Array[T] =
     {
       val result = new ArrayBuffer[T](DEFAULT_LIST_SIZE)
 
@@ -3988,7 +4011,7 @@ object Linq {
    *
    * @throws NullPointerException An argument is null.
    */
-  def toArray[T](values: java.util.Enumeration[T])(implicit manifest: ClassManifest[T]): Array[T] =
+  def toArray[T](values: java.util.Enumeration[T])(implicit manifest: ClassTag[T]): Array[T] =
     {
       if (values == null) throw new NullPointerException("values")
 
@@ -4004,7 +4027,7 @@ object Linq {
    *
    * @throws NullPointerException An argument is nul.
    */
-  def toArray[T](values: Traversable[T])(implicit manifest: ClassManifest[T]): Array[T] =
+  def toArray[T](values: Traversable[T])(implicit manifest: ClassTag[T]): Array[T] =
     {
       if (values == null) throw new NullPointerException("values")
       values.toArray
@@ -4015,7 +4038,7 @@ object Linq {
    *
    * @throws NullPointerException An argument is nul.
    */
-  def toArray[T](values: java.lang.Iterable[T])(implicit manifest: ClassManifest[T]): Array[T] =
+  def toArray[T](values: java.lang.Iterable[T])(implicit manifest: ClassTag[T]): Array[T] =
     {
       if (values == null) throw new NullPointerException("values")
 
@@ -4057,7 +4080,7 @@ object Linq {
    *
    * @throws NullPointerException An argument is null.
    */
-  def toArray[T](values: Collection[T])(implicit manifest: ClassManifest[T]): Array[T] =
+  def toArray[T](values: Collection[T])(implicit manifest: ClassTag[T]): Array[T] =
     {
       if (values == null) throw new NullPointerException("values")
 
@@ -4297,7 +4320,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null.
    */
-  def union[T](first: Array[T], second: Array[T])(implicit manifest: ClassManifest[T]): Array[T] =
+  def union[T](first: Array[T], second: Array[T])(implicit manifest: ClassTag[T]): Array[T] =
     {
       union(first, second, null)
     }
@@ -4332,7 +4355,7 @@ object Linq {
    *
    * @throws NullPointerException When the first or second argument is null.
    */
-  def union[T](first: Array[T], second: Array[T], comparison: ((T, T) => Int))(implicit manifest: ClassManifest[T]): Array[T] =
+  def union[T](first: Array[T], second: Array[T], comparison: ((T, T) => Int))(implicit manifest: ClassTag[T]): Array[T] =
     {
       var firstDistinct: Array[T] = null
       var secondDistinct: Array[T] = null
@@ -4378,7 +4401,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null
    */
-  def unzip[T, TResult1, TResult2](values: Array[T], func: (T => Pair[TResult1, TResult2]))(implicit manifest: ClassManifest[Pair[TResult1, TResult2]]): Array[Pair[TResult1, TResult2]] =
+  def unzip[T, TResult1, TResult2](values: Array[T], func: (T => Pair[TResult1, TResult2]))(implicit manifest: ClassTag[Pair[TResult1, TResult2]]): Array[Pair[TResult1, TResult2]] =
     {
       if (values == null) throw new NullPointerException("values")
 
@@ -4431,7 +4454,7 @@ object Linq {
    *
    * @throws NullPointerException When an argument is null
    */
-  def where[T](values: Array[T], predicate: (T => Boolean))(implicit manifest: Manifest[T]): Array[T] =
+  def where[T](values: Array[T], predicate: (T => Boolean))(implicit manifest: ClassTag[T]): Array[T] =
     {
       if (values == null) throw new NullPointerException("values")
       if (predicate == null) throw new NullPointerException("predicate")
@@ -4491,7 +4514,7 @@ object Linq {
    * @throws NullPointerException When an argument is null.
    */
   def zip[TFirst, TSecond, TResult](first: Array[TFirst], second: Array[TSecond],
-    func: ((TFirst, TSecond) => TResult))(implicit manifest: ClassManifest[TResult]): Array[TResult] =
+    func: ((TFirst, TSecond) => TResult))(implicit manifest: ClassTag[TResult]): Array[TResult] =
     {
       if (first == null) throw new NullPointerException("first")
       if (second == null) throw new NullPointerException("second")

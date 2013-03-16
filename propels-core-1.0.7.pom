@@ -4,7 +4,7 @@
   <artifactId>propels-core</artifactId>
   <packaging>jar</packaging>
   <name>propels</name>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <description>The Scala port of the JPropel library</description>
   <url>https://github.com/nicholas22/propels</url>
   <licenses>
@@ -30,7 +30,7 @@
     <dependency>
       <groupId>com.github.nicholas22</groupId>
       <artifactId>propel-core</artifactId>
-      <version>1.0.5</version>
+      <version>1.0.7</version>
     </dependency>
   </dependencies>
 </project>
