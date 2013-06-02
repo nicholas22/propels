@@ -129,6 +129,10 @@ There are plans to port certain things over to Scala (especially if they are usi
 
 ## Changelog
 
+#### 1.0.8: Upgrade dependency
+Update dependency: jpropel-light v1.1.8
+Linq.toString for arrays, iterables, sequence
+
 #### 1.0.7: Upgrade!
 Scala 2.10 compatibility
 Update dependency: jpropel v1.0.7

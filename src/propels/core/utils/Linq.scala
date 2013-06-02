@@ -46,7 +46,7 @@ object Linq {
   /**
    * The default list size to use for collecting results when the result size is unknown
    */
-  val DEFAULT_LIST_SIZE = 64
+  val DEFAULT_LIST_SIZE = propel.core.utils.Linq.DEFAULT_LIST_SIZE
 
   /**
    * Applies an accumulator function over a Traversable. The specified seed value is used as the initial accumulator value.
@@ -4304,6 +4304,30 @@ object Linq {
     {
       toBuffer(values).toIndexedSeq
     }
+
+  /**
+   * Returns a toString() of the given array
+   */
+  def toString[T](values: Array[T]): String = "["+values.deep.mkString(", ")+"]"
+
+  /**
+   * Returns a toString() of the given collection
+   */
+  def toString[T](values: java.lang.Iterable[T]): String = propel.core.utils.Linq.toString(values)
+
+  /**
+   * Returns a toString() of the given collection
+   */
+  def toString[T](values: Traversable[T]): String = {
+    val sb = new StringBuilder();
+    sb.append('[');
+    values.foreach(x => if(values == x) sb.append("(this Collection)") else sb.append(x).append(", "));
+    if(sb.length > 1)
+      sb.delete(sb.length-2, sb.length);
+    sb.append(']');
+    
+    sb.toString
+  }
 
   /**
    * Produces the union of two Traversables.
